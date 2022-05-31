@@ -89,7 +89,7 @@
       <router-view/>
     </main>
     <footer class="py-3 px-6 bg-gray-600 text-xs text-start text-white">
-      Report Engine Developer ©2022
+      <button @click="myMenu">Report Engine Developer ©2022</button>
     </footer>
   </div>
 </template>
@@ -109,7 +109,7 @@ export default {
     backHomepage: function () {
       this.$store.commit('setHomepage', true);
       this.$store.commit('setHeaderTitle', 'Graphic Engine');
-      this.$router.push('/');
+      this.$router.push('/userCodeAppPanel');
     },
     myMenu: function () {
       console.log(this.$store.state.homepage);
