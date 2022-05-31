@@ -4,9 +4,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <!--    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">-->
-    <!--    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,300" rel="stylesheet" type="text/css">-->
-    <!--    <link rel="icon" href="<%= BASE_URL %>favicon.ico">-->
     <title><%= htmlWebpackPlugin.options.title %></title>
     <style>
         html, body, #app {
@@ -22,6 +19,27 @@
 
         .fit-height {
             height: 100%;
+        }
+
+        /* width */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #cecece;
+            border-radius: 90px;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #bebdbd;
         }
 
         .red-title {
