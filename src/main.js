@@ -1,9 +1,9 @@
-import { createApp } from 'vue';
+import {createApp} from 'vue';
 import App from './App.vue';
-import { createWebHistory ,createRouter } from 'vue-router';
+import {createWebHistory, createRouter} from 'vue-router';
 import PanjangBerat from "@/PanjangBerat";
 import GraphicList from "@/GraphicList";
-import { createStore } from "vuex";
+import {createStore} from "vuex";
 
 
 const store = createStore({
@@ -11,7 +11,8 @@ const store = createStore({
         return {
             homepage: true,
             search: false,
-            headerTitle: 'Graphics Engine'
+            headerTitle: 'Graphics Engine',
+            searchText: '',
         }
     },
     mutations: {
@@ -20,6 +21,9 @@ const store = createStore({
         },
         setSearch(state, props) {
             state.search = props;
+        },
+        setSearchText(state, props) {
+            state.searchText = props;
         },
         setHeaderTitle(state, props) {
             state.headerTitle = props;
@@ -30,6 +34,10 @@ const store = createStore({
 const router = createRouter({
     history: createWebHistory('/'),
     routes: [
+        {
+            path: '/',
+            component: GraphicList
+        },
         {
             path: '/userCodeAppPanel',
             component: GraphicList
@@ -45,4 +53,12 @@ const application = createApp(App);
 
 application.use(router);
 application.use(store);
+
+// Register a global custom directive called `v-focus`
+application.directive('focus', {
+    mounted(el) {
+        el.focus()
+    }
+})
+
 application.mount('#app');

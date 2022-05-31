@@ -6,6 +6,9 @@
         <div v-if="$store.state.search" class="relative mt-1 w-full">
           <input
               type="text"
+              v-model="searchKey"
+              v-focus
+              v-on:keyup="typingSearch"
               id="nama-grafik"
               class="w-full py-3 px-4 text-xs text-gray-700 border-gray-200 rounded-lg shadow-sm focus:outline-blue-500"
               placeholder="Inputkan nama grafik"
@@ -98,10 +101,16 @@
 
 export default {
   name: 'App',
-  components: {},
+  data() {
+    return {
+      searchKey: ''
+    }
+  },
   methods: {
     cancelSearch: function () {
       this.$store.commit('setSearch', false);
+      this.searchKey = '';
+      this.$store.commit('setSearchText', '');
     },
     searchGraphic: function () {
       this.$store.commit('setSearch', true);
@@ -110,6 +119,9 @@ export default {
       this.$store.commit('setHomepage', true);
       this.$store.commit('setHeaderTitle', 'Graphic Engine');
       this.$router.push('/userCodeAppPanel');
+    },
+    typingSearch: function () {
+      this.$store.commit('setSearchText', this.searchKey);
     },
     myMenu: function () {
       console.log(this.$store.state.homepage);

@@ -68,22 +68,30 @@ export default {
         }
 
       ],
-      renderedGraphics: []
+      // renderedGraphics: []
     }
   },
   beforeMount() {
-    this.restoreGraphics();
+    // this.restoreGraphics();
   },
   methods: {
     restoreGraphics: function () {
-      this.renderedGraphics = [...this.graphics];
+      // this.renderedGraphics = [...this.graphics];
     },
     gotoGraphicPage: function (graphic) {
       this.restoreGraphics();
       this.$store.commit('setHomepage', false);
       this.$store.commit('setSearch', false);
+      this.$store.commit('setSearchText', '');
       this.$store.commit('setHeaderTitle', graphic.graphic);
       this.$router.push(graphic.url);
+    }
+  },
+  computed: {
+    renderedGraphics: function () {
+      return this.graphics.filter(g => g.graphic.toLowerCase().includes(
+              this.$store.state.searchText.toLowerCase()
+          ))
     }
   }
 }
