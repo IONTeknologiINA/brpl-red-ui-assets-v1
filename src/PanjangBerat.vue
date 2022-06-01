@@ -160,10 +160,31 @@ export default {
     }
   },
   methods: {
+    formToObject: function () {
+      return {
+        year: '',
+        wpp: '',
+        species: '',
+        location: ''
+      }
+    },
+    reset: function () {
+      this.selectedYear = '';
+      this.selectedWpp = {name: '571'};
+      this.selectedSpecies = '';
+      this.selectedLocation = '';
+    },
+    generateSuccess: function () {
+
+    },
+    generateFail: function () {
+
+    },
     generate: async function () {
       // const iteration = this.tryingAt;
       this.loading = true;
       this.canceled = false;
+      // const object = this.formToObject();
 
       // if (iteration === this.tryingAt) {
       //
