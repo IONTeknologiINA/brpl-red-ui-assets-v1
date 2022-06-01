@@ -1,5 +1,6 @@
 <template>
   <div class="flex flex-col h-screen bg-gray-100">
+    <notifications position="bottom right"/>
     <header class="py-5 bg-blue-600 text-white text-center">
       <div class="flex items-center justify-between flex-1 gap-8 sm:justify-end px-5">
 

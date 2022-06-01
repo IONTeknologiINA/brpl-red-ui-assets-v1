@@ -4,6 +4,8 @@ import {createWebHistory, createRouter} from 'vue-router';
 import PanjangBerat from "@/PanjangBerat";
 import GraphicList from "@/GraphicList";
 import {createStore} from "vuex";
+import Notifications from '@kyvg/vue3-notification';
+
 
 
 const store = createStore({
@@ -53,6 +55,7 @@ const application = createApp(App);
 
 application.use(router);
 application.use(store);
+application.use(Notifications);
 
 // Register a global custom directive called `v-focus`
 application.directive('focus', {

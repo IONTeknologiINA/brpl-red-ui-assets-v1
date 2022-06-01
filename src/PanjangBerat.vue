@@ -3,7 +3,7 @@
     <button v-if="loading" style="z-index: 10000"
             @click="onCancel"
             class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-3 py-2 text-xs mb-6 font-medium text-white bg-red-500 rounded-lg hover:bg-red-700 focus:ring">
-      Batalkan ...
+      Batalkan
     </button>
     <loading v-model:active="loading"
              :color="'#ff2020'"
@@ -172,6 +172,14 @@ export default {
     onCancel: function () {
       this.loading = false;
       this.canceled = true;
+      this.$notify({
+        title: 'Dibatalkan oleh pengguna!',
+        type: 'error'
+      });
+      // this.$notify({
+      //   title: 'Grafik berhasil digenerate!',
+      //   type: 'info'
+      // });
     }
   }
 }
