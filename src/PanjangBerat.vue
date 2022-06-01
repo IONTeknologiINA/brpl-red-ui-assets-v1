@@ -1,6 +1,18 @@
 <template>
-  <div>
-    <div class="max-w-screen-xl  mx-auto">
+  <div class="relative h-full">
+    <button v-if="loading" style="z-index: 10000"
+            @click="onCancel"
+            class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-3 py-2 text-xs mb-6 font-medium text-white bg-red-500 rounded-lg hover:bg-red-700 focus:ring">
+      Batalkan ...
+    </button>
+    <loading v-model:active="loading"
+             :color="'#ff2020'"
+             :width="25"
+             :height="25"
+             :opacity="0.9"
+             :is-full-page="true"/>
+    <div class="max-w-screen-xl mx-auto">
+
       <div class="max-w-lg mx-auto">
 
 
@@ -11,6 +23,7 @@
             <label for="tahun" class="text-xs font-medium">Tahun</label>
             <div class="relative mt-1">
               <input
+                  v-model="selectedYear"
                   type="text"
                   id="tahun"
                   class="w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm"
@@ -31,8 +44,13 @@
           </span>
                 </ListboxButton>
 
-                <transition leave-active-class="transition duration-100 ease-in" leave-from-class="opacity-100"
-                            leave-to-class="opacity-0">
+                <transition enter-active-class="transition duration-100 ease-out"
+                            enter-from-class="transform scale-95 opacity-0"
+                            enter-to-class="transform scale-100 opacity-100"
+                            leave-active-class="transition duration-75 ease-out"
+                            leave-from-class="transform scale-100 opacity-100"
+                            leave-to-class="transform scale-95 opacity-0"
+                >
                   <ListboxOptions
                       class="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-xs shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                     <ListboxOption
@@ -55,15 +73,6 @@
                 </transition>
               </div>
             </Listbox>
-
-            <!--            <div class="relative mt-1">-->
-            <!--              <input-->
-            <!--                  type="text"-->
-            <!--                  id="wpp"-->
-            <!--                  class="w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm"-->
-            <!--                  placeholder="Pilih WPP"-->
-            <!--              />-->
-            <!--            </div>-->
           </div>
 
           <div>
@@ -71,6 +80,7 @@
 
             <div class="relative mt-1">
               <input
+                  v-model="selectedSpecies"
                   type="text"
                   id="spesies"
                   class="w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm"
@@ -84,6 +94,7 @@
 
             <div class="relative mt-1">
               <input
+                  v-model="selectedLocation"
                   type="text"
                   id="lokasi"
                   class="w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm"
@@ -108,8 +119,10 @@ import {
   ListboxButton,
   ListboxOptions,
   ListboxOption,
-} from '@headlessui/vue'
-import {CheckIcon, SelectorIcon} from '@heroicons/vue/solid'
+} from '@headlessui/vue';
+import {CheckIcon, SelectorIcon} from '@heroicons/vue/solid';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
   name: 'PanjangBerat',
@@ -119,11 +132,18 @@ export default {
     ListboxOptions,
     ListboxOption,
     CheckIcon,
-    SelectorIcon
+    SelectorIcon,
+    Loading
   },
   data() {
     return {
+      tryingAt: 0,
+      loading: false,
+      canceled: false,
       selectedWpp: {name: '571'},
+      selectedYear: '',
+      selectedSpecies: '',
+      selectedLocation: '',
       wpp: [
         {name: '571'},
         {name: '572'},
@@ -141,7 +161,17 @@ export default {
   },
   methods: {
     generate: async function () {
+      // const iteration = this.tryingAt;
+      this.loading = true;
+      this.canceled = false;
 
+      // if (iteration === this.tryingAt) {
+      //
+      // }
+    },
+    onCancel: function () {
+      this.loading = false;
+      this.canceled = true;
     }
   }
 }
