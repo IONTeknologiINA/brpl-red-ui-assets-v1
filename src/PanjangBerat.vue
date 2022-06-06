@@ -1,10 +1,15 @@
 <template>
   <div class="relative h-full">
-    <button v-if="loading" style="z-index: 10000"
+    <button v-if="loading && !insertingImage" style="z-index: 10000"
             @click="onCancel"
             class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-3 py-2 text-xs mb-6 font-medium text-white bg-red-500 rounded-lg hover:bg-red-700 focus:ring">
       Batalkan
     </button>
+    <span v-if="insertingImage"
+          style="z-index: 10000"
+          class="text-xs text-red-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+      Menyisipkan gambar ...
+    </span>
     <loading v-model:active="loading"
              :color="'#ff2020'"
              :width="25"
@@ -126,6 +131,7 @@ import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
   name: 'PanjangBerat',
+  inject: ['insertGraphic'],
   components: {
     Listbox,
     ListboxButton,
@@ -140,10 +146,11 @@ export default {
       tryingAt: 0,
       loading: false,
       canceled: false,
-      selectedWpp: {name: '571'},
-      selectedYear: '',
-      selectedSpecies: '',
-      selectedLocation: '',
+      insertingImage: false,
+      selectedWpp: {name: '718'},
+      selectedYear: '2020',
+      selectedSpecies: 'Layang',
+      selectedLocation: 'PPI Pomako',
       wpp: [
         {name: '571'},
         {name: '572'},
@@ -156,16 +163,17 @@ export default {
         {name: '716'},
         {name: '717'},
         {name: '718'},
-      ]
+      ],
+      graphicImageName: ''
     }
   },
   methods: {
     formToObject: function () {
       return {
-        year: '',
-        wpp: '',
-        species: '',
-        location: ''
+        year: Number(this.selectedYear),
+        wpp: Number(this.selectedWpp.name),
+        species: this.selectedSpecies,
+        location: this.selectedLocation
       }
     },
     reset: function () {
@@ -174,21 +182,51 @@ export default {
       this.selectedSpecies = '';
       this.selectedLocation = '';
     },
-    generateSuccess: function () {
-
-    },
-    generateFail: function () {
-
-    },
     generate: async function () {
-      // const iteration = this.tryingAt;
+      this.tryingAt++;
+      const iteration = this.tryingAt;
+      this.graphicImageName = '';
       this.loading = true;
       this.canceled = false;
-      // const object = this.formToObject();
+      this.insertingImage = false;
+      this.$store.commit('setSearchText', '');
+      const body = this.formToObject();
 
-      // if (iteration === this.tryingAt) {
-      //
-      // }
+      this.axios.post(`${this.$store.state.host}/execute-graphic/panjang_x_berat`, body)
+          .then(({data}) => {
+            const {status, graphicImageName} = data;
+            if (iteration === this.tryingAt && !this.canceled) {
+              if (status === 'SUCCESS') {
+                this.graphicImageName = graphicImageName || '';
+                this.insertingImage = true;
+
+                // execute google script
+                this.insertGraphic(this.graphicImageName, () => {
+                  this.onInsertImage(true);
+                }, () => {
+                  this.onInsertImage(false);
+                });
+
+
+                // setTimeout(() => {
+                //   this.insertingImage = false;
+                //   this.loading = false;
+                //   this.$notify({
+                //     title: 'Grafik berhasil disisipkan!',
+                //     type: 'success'
+                //   });
+                // }, 3000);
+
+              } else {
+                this.generateFail();
+              }
+            }
+          })
+          .catch(() => {
+            if (iteration === this.tryingAt) {
+              this.generateFail();
+            }
+          });
     },
     onCancel: function () {
       this.loading = false;
@@ -197,10 +235,22 @@ export default {
         title: 'Dibatalkan oleh pengguna!',
         type: 'error'
       });
-      // this.$notify({
-      //   title: 'Grafik berhasil digenerate!',
-      //   type: 'info'
-      // });
+    },
+    onInsertImage: function (success) {
+      this.insertingImage = false;
+      this.loading = false;
+      this.$notify({
+        title: 'Grafik berhasil disisipkan!',
+        type: success ? 'success' : 'error'
+      });
+    },
+    generateFail: function () {
+      this.graphicImageName = '';
+      this.loading = false;
+      this.$notify({
+        title: 'Grafik tidak berhasil digenerate.',
+        type: 'error'
+      });
     }
   }
 }

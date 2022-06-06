@@ -16,6 +16,7 @@ const store = createStore({
             search: false,
             headerTitle: 'Graphics Engine',
             searchText: '',
+            host: 'https://a383-103-121-18-20.ap.ngrok.io'
         }
     },
     mutations: {
@@ -58,6 +59,13 @@ application.use(router);
 application.use(store);
 application.use(Notifications);
 application.use(VueAxios, axios);
+application.provide('insertGraphic', (graphicImageName, onSuccess, onFailure) => {
+    console.log('Running google.script.run.insertGraphic() script');
+    google.script.run
+        .withSuccessHandler(onSuccess)
+        .withFailureHandler(onFailure)
+        .insertGraphic(graphicImageName);
+});
 
 // Register a global custom directive called `v-focus`
 application.directive('focus', {
