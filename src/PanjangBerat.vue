@@ -21,97 +21,92 @@
       <div class="max-w-lg mx-auto">
 
 
-        <div class="px-6 mt-6 mb-0 space-y-4 rounded-lg ">
+        <div class="px-6 mt-6 mb-0 space-y-5 rounded-lg ">
           <p class="text-lg font-medium">Masukan parameter</p>
 
           <div>
-            <label for="tahun" class="text-xs font-medium">Tahun</label>
-            <div class="relative mt-1">
-              <input
-                  v-model="selectedYear"
-                  type="text"
-                  id="tahun"
-                  class="w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm"
-                  placeholder="Inputkan tahun"
-              />
-            </div>
+            <label for="tahun" class="text-sm font-medium">Tahun</label>
+            <Multiselect
+                placeholder="Pilih Tahun"
+                v-model="selectedYear"
+                :classes="{
+                    clearIcon: '',
+                    container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer bg-white rounded  outline-none py-3 pl-2 pr-0 text-xs shadow-sm',
+                    dropdown: 'max-h-60 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                    dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
+                    dropdownHidden: 'hidden',
+                }"
+                :options="years"
+            />
           </div>
 
           <div>
-            <label for="wpp" class="text-xs font-medium">WPP</label>
-            <Listbox v-model="selectedWpp">
-              <div class="relative mt-1">
-                <ListboxButton
-                    class="relative w-full cursor-default rounded-lg bg-white py-3 px-4 text-left shadow-sm focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                  <span class="block truncate text-xs">{{ selectedWpp.name }}</span>
-                  <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-            <SelectorIcon class="h-5 w-5 text-gray-400" aria-hidden="true"/>
-          </span>
-                </ListboxButton>
-
-                <transition enter-active-class="transition duration-100 ease-out"
-                            enter-from-class="transform scale-95 opacity-0"
-                            enter-to-class="transform scale-100 opacity-100"
-                            leave-active-class="transition duration-75 ease-out"
-                            leave-from-class="transform scale-100 opacity-100"
-                            leave-to-class="transform scale-95 opacity-0"
-                >
-                  <ListboxOptions
-                      class="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-xs shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                    <ListboxOption
-                        v-slot="{ active, selected }"
-                        v-for="item in wpp"
-                        :key="item.name"
-                        :value="item"
-                        as="template"
-                    >
-                      <li :class="[ active ? 'bg-blue-100 text-blue-900' : 'text-gray-900', 'relative cursor-default select-none py-2 pl-10 pr-4', ]">
-                        <span :class="[ selected ? 'font-medium text-blue-700' : 'font-normal', 'block truncate', ]">
-                          {{ item.name }}
-                        </span>
-                        <span v-if="selected" class="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
-                          <CheckIcon class="h-5 w-5" aria-hidden="true"/>
-                        </span>
-                      </li>
-                    </ListboxOption>
-                  </ListboxOptions>
-                </transition>
-              </div>
-            </Listbox>
+            <label for="wpp" class="text-sm font-medium">WPP</label>
+            <Multiselect
+                placeholder="Pilih WPP"
+                v-model="selectedWpp"
+                :classes="{
+                    clearIcon: '',
+                    container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer bg-white rounded  outline-none py-3 pl-2 pr-0 text-xs shadow-sm',
+                    dropdown: 'max-h-60 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                    dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
+                    dropdownHidden: 'hidden',
+                  }"
+                :options="wpp"
+            />
           </div>
 
           <div>
-            <label for="spesies" class="text-xs font-medium">Spesies</label>
+            <label for="spesies" class="text-sm font-medium">Spesies</label>
 
             <div class="relative mt-1">
-              <input
+              <Multiselect
                   v-model="selectedSpecies"
-                  type="text"
-                  id="spesies"
-                  class="w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm"
-                  placeholder="Inputkan nama spesies"
+                  mode="tags"
+                  :classes="{
+                    clearIcon: '',
+                    container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer bg-white rounded  outline-none py-2 pl-2 pr-0 text-xs shadow-sm',
+                    dropdown: 'max-h-60 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                    dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
+                    dropdownHidden: 'hidden',
+                    tagsSearch: 'absolute inset-0 border-0 outline-none -ml-1.5 focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
+                  }"
+                  placeholder="Pilih nama spesies"
+                  :close-on-select="false"
+                  :searchable="true"
+                  :create-option="false"
+                  :options="species"
               />
             </div>
           </div>
 
           <div>
-            <label for="lokasi" class="text-xs font-medium">Lokasi Pendaratan</label>
+            <label for="lokasi" class="text-sm font-medium">Lokasi Pendaratan</label>
 
             <div class="relative mt-1">
-              <input
+              <Multiselect
+                  placeholder="Pilih lokasi sampling"
                   v-model="selectedLocation"
-                  type="text"
-                  id="lokasi"
-                  class="w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm"
-                  placeholder="Inputkan lokasi pendaratan"
+                  :classes="{
+                    clearIcon: '',
+                    container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer  outline-none py-3 pl-2 pr-0 text-xs shadow-sm',
+                    dropdown: 'max-h-60 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                    dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
+                    dropdownHidden: 'hidden',
+                  }"
+                  :filter-results="true"
+                  :searchable="true"
+                  :options="locations"
               />
             </div>
           </div>
 
-          <button @click="generate"
-                  class="w-full px-5 py-3 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring">
-            Generate Grafik
-          </button>
+          <div class="flex w-full pt-2.5">
+            <button @click="generate"
+                    class="w-full px-4 py-3 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring">
+              Generate Grafik
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -119,27 +114,16 @@
 </template>
 
 <script>
-import {
-  Listbox,
-  ListboxButton,
-  ListboxOptions,
-  ListboxOption,
-} from '@headlessui/vue';
-import {CheckIcon, SelectorIcon} from '@heroicons/vue/solid';
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
+import Multiselect from '@vueform/multiselect'
 
 export default {
   name: 'PanjangBerat',
   inject: ['insertGraphic'],
   components: {
-    Listbox,
-    ListboxButton,
-    ListboxOptions,
-    ListboxOption,
-    CheckIcon,
-    SelectorIcon,
-    Loading
+    Loading,
+    Multiselect
   },
   data() {
     return {
@@ -147,22 +131,44 @@ export default {
       loading: false,
       canceled: false,
       insertingImage: false,
-      selectedWpp: {name: '718'},
-      selectedYear: '2020',
-      selectedSpecies: 'Layang',
-      selectedLocation: 'PPI Pomako',
+      selectedWpp: '',
+      selectedYear: {year: 2020},
+      selectedSpecies: [],
+      selectedLocation: '',
       wpp: [
-        {name: '571'},
-        {name: '572'},
-        {name: '573'},
-        {name: '711'},
-        {name: '712'},
-        {name: '713'},
-        {name: '714'},
-        {name: '715'},
-        {name: '716'},
-        {name: '717'},
-        {name: '718'},
+        '571',
+        '572',
+        '573',
+        '711',
+        '712',
+        '713',
+        '714',
+        '715',
+        '716',
+        '717',
+        '718',
+      ],
+      years: [
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+      ],
+      locations: [
+        {value: 'Margasari', label: 'Margasari'},
+        {value: 'Kuala Teladas', label: 'Kuala Teladas'},
+        {value: 'Pasar Baru', label: 'Pasar Baru'},
+        {value: 'PPI Ujong Baroh Aceh', label: 'PPI Ujong Baroh Aceh'},
+        {value: 'PPI Pomako', label: 'PPI Pomako'},
+      ],
+      species: [
+        {value: 'Layang', label: 'Layang'},
+        {value: 'Kembung', label: 'Kembung'},
+        {value: 'Rajungan', label: 'Rajungan'},
+        {value: 'Lobster Batik', label: 'Lobster Batik'},
       ],
       graphicImageName: ''
     }
@@ -171,7 +177,7 @@ export default {
     formToObject: function () {
       return {
         year: Number(this.selectedYear),
-        wpp: Number(this.selectedWpp.name),
+        wpp: Number(this.selectedWpp),
         species: this.selectedSpecies,
         location: this.selectedLocation
       }
@@ -191,6 +197,7 @@ export default {
       this.insertingImage = false;
       this.$store.commit('setSearchText', '');
       const body = this.formToObject();
+      console.log(body);
 
       this.axios.post(`${this.$store.state.host}/execute-graphic/panjang_x_berat`, body)
           .then(({data}) => {
@@ -201,21 +208,20 @@ export default {
                 this.insertingImage = true;
 
                 // execute google script
-                this.insertGraphic(this.graphicImageName, () => {
-                  this.onInsertImage(true);
-                }, () => {
-                  this.onInsertImage(false);
-                });
+                // this.insertGraphic(this.graphicImageName, () => {
+                //   this.onInsertImage(true);
+                // }, () => {
+                //   this.onInsertImage(false);
+                // });
 
-
-                // setTimeout(() => {
-                //   this.insertingImage = false;
-                //   this.loading = false;
-                //   this.$notify({
-                //     title: 'Grafik berhasil disisipkan!',
-                //     type: 'success'
-                //   });
-                // }, 3000);
+                setTimeout(() => {
+                  this.insertingImage = false;
+                  this.loading = false;
+                  this.$notify({
+                    title: 'Grafik berhasil disisipkan!',
+                    type: 'success'
+                  });
+                }, 3000);
 
               } else {
                 this.generateFail();
@@ -256,6 +262,4 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style src="@vueform/multiselect/themes/default.css"></style>
