@@ -5,7 +5,8 @@ import PanjangBerat from "@/PanjangBerat";
 import GraphicList from "@/GraphicList";
 import {createStore} from "vuex";
 import Notifications from '@kyvg/vue3-notification';
-
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 
 
 const store = createStore({
@@ -56,6 +57,7 @@ const application = createApp(App);
 application.use(router);
 application.use(store);
 application.use(Notifications);
+application.use(VueAxios, axios);
 
 // Register a global custom directive called `v-focus`
 application.directive('focus', {
