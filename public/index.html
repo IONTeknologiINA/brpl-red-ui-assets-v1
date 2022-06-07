@@ -9,12 +9,23 @@
         html, body, #app {
             margin: 0;
             height: 100%;
-            /*font-family: 'Open Sans',serif;*/
+            font-family: 'Open Sans', serif;
             /*font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;*/
         }
 
         :root {
-            font-family: 'Sarabun', sans-serif;
+            --ms-ring-color: none;
+            --ms-font-size: 0.75rem;
+            --ms-option-font-size: 0.75rem;
+            --ms-tag-font-size: 0.75rem;
+            --ms-tag-line-height: 1rem;
+            --ms-tag-font-weight: 100;
+            --ms-tag-bg: #3b82f6;
+            --ms-spinner-color: #3b82f6;
+            --ms-border-color: #eeeeee;
+            --ms-radius: 5px;
+            --ms-option-bg-selected: #3b82f6;
+            --ms-option-bg-selected-pointed: #2563eb;
         }
 
         .fit-height {
@@ -28,18 +39,18 @@
 
         /* Track */
         ::-webkit-scrollbar-track {
-            background: #f1f1f1;
+            background: #fcfcfc;
         }
 
         /* Handle */
         ::-webkit-scrollbar-thumb {
-            background: #cecece;
+            background: #efefef;
             border-radius: 90px;
         }
 
         /* Handle on hover */
         ::-webkit-scrollbar-thumb:hover {
-            background: #bebdbd;
+            background: #d9d9d9;
         }
 
         .red-title {
@@ -54,7 +65,7 @@
     <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
         Please enable it to continue.</strong>
 </noscript>
-<div id="app" class="bg-grey-50"></div>
+<div id="app" class="w-full h-full bg-gray-100"></div>
 <!-- built files will be auto injected -->
 </body>
 </html>
