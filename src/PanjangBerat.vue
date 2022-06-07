@@ -1,13 +1,13 @@
 <template>
-  <div class="relative h-full">
+  <div class="flex-1 mt-20 pt-1 pb-5 mb-10 bg-gray-100 h-full">
     <button v-if="loading && !insertingImage" style="z-index: 10000"
             @click="onCancel"
-            class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-3 py-2 text-xs mb-6 font-medium text-white bg-red-500 rounded-lg hover:bg-red-700 focus:ring">
+            class="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-3 py-2 text-xs mb-12 font-medium text-white bg-red-500 rounded-lg hover:bg-red-700 focus:ring">
       Batalkan
     </button>
     <span v-if="insertingImage"
           style="z-index: 10000"
-          class="text-xs text-red-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          class="text-xs text-red-500 absolute bottom-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
       Menyisipkan gambar ...
     </span>
     <loading v-model:active="loading"
@@ -22,16 +22,16 @@
 
 
         <div class="px-6 mt-6 mb-0 space-y-5 rounded-lg ">
-          <p class="text-lg font-medium">Masukan parameter</p>
+          <p class="text-lg font-medium pl-1">Masukan parameter</p>
 
           <div>
-            <label for="tahun" class="text-sm font-medium">Tahun</label>
+            <label for="tahun" class="text-xs font-medium pl-1">Tahun</label>
             <Multiselect
                 placeholder="Pilih Tahun"
                 v-model="selectedYear"
                 :classes="{
                     clearIcon: '',
-                    container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer bg-white rounded  outline-none py-3 pl-2 pr-0 text-xs shadow-sm',
+                    container: 'bg-white relative mx-auto w-full flex items-center justify-end box-border cursor-pointer bg-white rounded  outline-none py-3 pl-2 pr-0 text-xs shadow-sm',
                     dropdown: 'max-h-60 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
                     dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
                     dropdownHidden: 'hidden',
@@ -41,7 +41,7 @@
           </div>
 
           <div>
-            <label for="wpp" class="text-sm font-medium">WPP</label>
+            <label for="wpp" class="text-xs font-medium pl-1">WPP</label>
             <Multiselect
                 placeholder="Pilih WPP"
                 v-model="selectedWpp"
@@ -57,7 +57,7 @@
           </div>
 
           <div>
-            <label for="spesies" class="text-sm font-medium">Spesies</label>
+            <label for="spesies" class="text-xs font-medium pl-1">Spesies</label>
 
             <div class="relative mt-1">
               <Multiselect
@@ -69,35 +69,61 @@
                     dropdown: 'max-h-60 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
                     dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
                     dropdownHidden: 'hidden',
-                    tagsSearch: 'absolute inset-0 border-0 outline-none -ml-1.5 focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
+                    tagsSearch: 'absolute inset-0 border-0 outline-none -ml-1.5 focus:ring-0 appearance-none p-0 text-xs box-border w-full',
+                    noOptions: 'py-2 px-3 text-red-500 bg-white text-left',
+                    noResults: 'py-2 px-3 text-red-500 bg-white text-left',
                   }"
                   placeholder="Pilih nama spesies"
+                  no-results-text="Tidak ditemukan"
+                  no-options-text="Data kosong"
                   :close-on-select="false"
                   :searchable="true"
                   :create-option="false"
+                  :clear-on-select="false"
                   :options="species"
               />
             </div>
           </div>
 
           <div>
-            <label for="lokasi" class="text-sm font-medium">Lokasi Pendaratan</label>
+            <label for="lokasi" class="text-xs font-medium pl-1">Lokasi Pendaratan</label>
 
             <div class="relative mt-1">
               <Multiselect
+                  no-results-text="Tidak ditemukan"
+                  no-options-text="Data kosong"
                   placeholder="Pilih lokasi sampling"
                   v-model="selectedLocation"
                   :classes="{
                     clearIcon: '',
-                    container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer  outline-none py-3 pl-2 pr-0 text-xs shadow-sm',
+                    container: 'border-gray-200 relative mx-auto w-full flex items-center justify-end box-border cursor-pointer  outline-none py-3 pl-2 pr-0 text-xs shadow-sm',
                     dropdown: 'max-h-60 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
                     dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
                     dropdownHidden: 'hidden',
+                    noOptions: 'py-2 px-3 text-red-500 bg-white text-left',
+                    noResults: 'py-2 px-3 text-red-500 bg-white text-left',
                   }"
                   :filter-results="true"
                   :searchable="true"
                   :options="locations"
               />
+            </div>
+          </div>
+
+          <div>
+            <label for="date-range" class="text-xs font-medium">Rentang Tanggal</label>
+
+            <div class="relative mt-1">
+              <DatePicker v-model="selectedDateRange" :masks="dateRangeMasks" is-range>
+                <template v-slot="{ inputValue, inputEvents }">
+                  <input
+                      placeholder="Masukan rentang tanggal"
+                      class="bg-white w-full py-3 px-4 text-xs border-gray-200 rounded shadow-sm outline-white"
+                      :value="dateRange(inputValue)"
+                      v-on="inputEvents.end"
+                  />
+                </template>
+              </DatePicker>
             </div>
           </div>
 
@@ -116,14 +142,17 @@
 <script>
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
-import Multiselect from '@vueform/multiselect'
+import Multiselect from '@vueform/multiselect';
+import {toRaw} from 'vue';
+import {DatePicker} from 'v-calendar';
 
 export default {
   name: 'PanjangBerat',
-  inject: ['insertGraphic'],
+  // inject: ['insertGraphic'],
   components: {
     Loading,
-    Multiselect
+    Multiselect,
+    DatePicker
   },
   data() {
     return {
@@ -135,6 +164,8 @@ export default {
       selectedYear: {year: 2020},
       selectedSpecies: [],
       selectedLocation: '',
+      selectedDateRange: this.resetDateRange(),
+      dateRangeMasks: {input: 'DD/MM/YYYY',},
       wpp: [
         '571',
         '572',
@@ -178,7 +209,7 @@ export default {
       return {
         year: Number(this.selectedYear),
         wpp: Number(this.selectedWpp),
-        species: this.selectedSpecies,
+        species: toRaw(this.selectedSpecies),
         location: this.selectedLocation
       }
     },
@@ -190,7 +221,7 @@ export default {
     },
     generate: async function () {
       this.tryingAt++;
-      const iteration = this.tryingAt;
+      // const iteration = this.tryingAt;
       this.graphicImageName = '';
       this.loading = true;
       this.canceled = false;
@@ -199,40 +230,50 @@ export default {
       const body = this.formToObject();
       console.log(body);
 
-      this.axios.post(`${this.$store.state.host}/execute-graphic/panjang_x_berat`, body)
-          .then(({data}) => {
-            const {status, graphicImageName} = data;
-            if (iteration === this.tryingAt && !this.canceled) {
-              if (status === 'SUCCESS') {
-                this.graphicImageName = graphicImageName || '';
-                this.insertingImage = true;
+      setTimeout(() => {
+        this.insertingImage = false;
+        this.loading = false;
+        this.$notify({
+          title: 'Grafik berhasil disisipkan!',
+          type: 'success'
+        });
+      }, 3000);
 
-                // execute google script
-                // this.insertGraphic(this.graphicImageName, () => {
-                //   this.onInsertImage(true);
-                // }, () => {
-                //   this.onInsertImage(false);
-                // });
 
-                setTimeout(() => {
-                  this.insertingImage = false;
-                  this.loading = false;
-                  this.$notify({
-                    title: 'Grafik berhasil disisipkan!',
-                    type: 'success'
-                  });
-                }, 3000);
-
-              } else {
-                this.generateFail();
-              }
-            }
-          })
-          .catch(() => {
-            if (iteration === this.tryingAt) {
-              this.generateFail();
-            }
-          });
+      // this.axios.post(`${this.$store.state.host}/execute-graphic/panjang_x_berat`, body)
+      //     .then(({data}) => {
+      //       const {status, graphicImageName} = data;
+      //       if (iteration === this.tryingAt && !this.canceled) {
+      //         if (status === 'SUCCESS') {
+      //           this.graphicImageName = graphicImageName || '';
+      //           this.insertingImage = true;
+      //
+      //           // execute google script
+      //           // this.insertGraphic(this.graphicImageName, () => {
+      //           //   this.onInsertImage(true);
+      //           // }, () => {
+      //           //   this.onInsertImage(false);
+      //           // });
+      //
+      //           setTimeout(() => {
+      //             this.insertingImage = false;
+      //             this.loading = false;
+      //             this.$notify({
+      //               title: 'Grafik berhasil disisipkan!',
+      //               type: 'success'
+      //             });
+      //           }, 3000);
+      //
+      //         } else {
+      //           this.generateFail();
+      //         }
+      //       }
+      //     })
+      //     .catch(() => {
+      //       if (iteration === this.tryingAt) {
+      //         this.generateFail();
+      //       }
+      //     });
     },
     onCancel: function () {
       this.loading = false;
@@ -257,9 +298,19 @@ export default {
         title: 'Grafik tidak berhasil digenerate.',
         type: 'error'
       });
+    },
+    dateRange: function (value) {
+      return value.start && value.start ? `${value.start} - ${value.end}` : '';
+    },
+    resetDateRange: function () {
+      return {start: null, end: null};
     }
   }
 }
 </script>
 
-<style src="@vueform/multiselect/themes/default.css"></style>
+<style>
+@import '@vueform/multiselect/themes/default.css';
+@import 'v-calendar/dist/style.css';
+</style>
+<!--<style src="v-calendar/dist/style.css"></style>-->

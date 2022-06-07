@@ -5,8 +5,9 @@ import PanjangBerat from "@/PanjangBerat";
 import GraphicList from "@/GraphicList";
 import {createStore} from "vuex";
 import Notifications from '@kyvg/vue3-notification';
-import axios from 'axios'
-import VueAxios from 'vue-axios'
+import axios from 'axios';
+import VueAxios from 'vue-axios';
+import { SetupCalendar } from 'v-calendar';
 
 
 const store = createStore({
@@ -59,6 +60,8 @@ application.use(router);
 application.use(store);
 application.use(Notifications);
 application.use(VueAxios, axios);
+
+application.use(SetupCalendar, {});
 // application.provide('insertGraphic', (graphicImageName, onSuccess, onFailure) => {
 //     console.log('Running google.script.run.insertGraphic() script');
 //     google.script.run

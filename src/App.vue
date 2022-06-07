@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col h-screen bg-gray-100">
+  <div class="w-full h-full bg-gray-100">
     <notifications position="bottom right"/>
-    <header class="py-5 bg-blue-600 text-white text-center">
+    <header class="fixed w-full top-0 z-50 py-5 bg-blue-600 text-white text-center">
       <div class="flex items-center justify-between flex-1 gap-8 sm:justify-end px-5">
 
         <div v-if="$store.state.search" class="relative mt-1 w-full">
@@ -89,10 +89,13 @@
 
       </div>
     </header>
-    <main class="fit-height">
-      <router-view/>
+    <main class="relative w-full h-full bg-grey-100 z-30">
+      <div class="max-h-screen overflow-y-auto w-full bg-gray-100">
+        <router-view/>
+      </div>
+
     </main>
-    <footer class="py-3 px-6 bg-gray-600 text-xs text-start text-white">
+    <footer class="fixed bottom-0 z-40 w-full py-3 px-6 bg-gray-600 text-xs text-start text-white">
       <button @click="myMenu">Report Engine Developer ©2022</button>
     </footer>
   </div>

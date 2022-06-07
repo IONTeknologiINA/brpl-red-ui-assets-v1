@@ -1,6 +1,5 @@
 <template>
-  <div class="flex-1 overflow-y-auto p-5">
-
+  <div class="flex-1 mt-20 pt-5 pb-5 mb-10 px-5 bg-gray-100">
     <div v-for="(graphic, index) in renderedGraphics" :key="graphic.graphic"
          class="relative block py-5 px-6 overflow-hidden border border-gray-100 rounded-lg bg-white"
          :class="index > 0 ? 'mt-5' : ''"
@@ -48,21 +47,39 @@ export default {
     return {
       graphics: [
         {
-          graphic: 'Panjang vs berat',
-          description: 'Grafik yang digunakan untuk mensimulasikan hasil perhitungan panjang dan berat.',
+          graphic: 'Hubungan Panjang Berat',
+          description: 'Grafik yang digunakan untuk mensimulasikan hasil perhitungan hubungan panjang dan berat.',
           createText: 'Buat Grafik',
           url: '/panjang-berat',
           createStatus: true
         },
         {
-          graphic: 'Tingkat sebaran',
-          description: 'Grafik yang digunakan untuk memprediksi penyebaran suatu spesies.',
+          graphic: 'CPUE',
+          description: 'Grafik yang digunakan untuk menentukan hasil tangkapan per upaya.',
           createText: 'Segera ...',
           createStatus: false
         },
         {
-          graphic: 'Saran produksi',
-          description: 'Grafik yang digunakan untuk mempreiksi total produksi yang terjadi.',
+          graphic: 'LPUE',
+          description: 'Grafik yang digunakan untuk menentukan hasil tangkapan per trip.',
+          createText: 'Segera ...',
+          createStatus: false
+        },
+        {
+          graphic: 'LPUE',
+          description: 'Grafik yang digunakan untuk menentukan hasil tangkapan per trip.',
+          createText: 'Segera ...',
+          createStatus: false
+        },
+        {
+          graphic: 'LPUE',
+          description: 'Grafik yang digunakan untuk menentukan hasil tangkapan per trip.',
+          createText: 'Segera ...',
+          createStatus: false
+        },
+        {
+          graphic: 'LPUE',
+          description: 'Grafik yang digunakan untuk menentukan hasil tangkapan per trip.',
           createText: 'Segera ...',
           createStatus: false
         }
