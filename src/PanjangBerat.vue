@@ -114,7 +114,9 @@
             <label for="date-range" class="text-xs font-medium">Rentang Tanggal</label>
 
             <div class="relative mt-1">
-              <DatePicker v-model="selectedDateRange" :masks="dateRangeMasks" is-range>
+              <DatePicker v-model="selectedDateRange"
+                          :max-date="new Date()"
+                          :masks="dateRangeMasks" is-range>
                 <template v-slot="{ inputValue, inputEvents }">
                   <input
                       placeholder="Masukan rentang tanggal"
@@ -205,12 +207,18 @@ export default {
     }
   },
   methods: {
+    maxDate: function () {
+      let date = new Date();
+      date.setDate(date.getDate() + 1);
+      return date;
+    },
     formToObject: function () {
       return {
         year: Number(this.selectedYear),
         wpp: Number(this.selectedWpp),
         species: toRaw(this.selectedSpecies),
-        location: this.selectedLocation
+        location: this.selectedLocation,
+        dateRange: toRaw(this.selectedDateRange)
       }
     },
     reset: function () {
@@ -218,6 +226,10 @@ export default {
       this.selectedWpp = {name: '571'};
       this.selectedSpecies = '';
       this.selectedLocation = '';
+      this.selectedDateRange = {
+        start: null,
+        end: null
+      };
     },
     generate: async function () {
       this.tryingAt++;
@@ -287,7 +299,7 @@ export default {
       this.insertingImage = false;
       this.loading = false;
       this.$notify({
-        title: 'Grafik berhasil disisipkan!',
+        title: success ? 'Grafik berhasil disisipkan!' : 'Grafik gagal disisipkan',
         type: success ? 'success' : 'error'
       });
     },
@@ -309,8 +321,46 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 @import '@vueform/multiselect/themes/default.css';
 @import 'v-calendar/dist/style.css';
+
+:deep(.vc-svg-icon) {
+  margin-top: 5px;
+}
+
+:deep(.vc-header) {
+  padding-top: 15px;
+  padding-bottom: 8px;
+}
+
+:deep(.vc-title) {
+  font-family: Arial, sans-serif;
+}
+
+:deep(.vc-weeks) {
+  /*margin-top: 30px;*/
+}
+
+:deep(.vc-weekday) {
+  font-family: Arial, sans-serif;
+  font-size: 0.75rem;
+  padding-bottom: 12px;
+}
+
+:deep(.vc-day-content) {
+  font-family: Arial, sans-serif;
+  font-size: 0.77rem;
+}
+
+:deep(.vc-nav-item) {
+  font-family: Arial, sans-serif;
+  font-size: 0.75rem;
+}
+
+:deep(.vc-nav-title) {
+  font-family: Arial, sans-serif;
+  font-size: 0.75rem;
+}
 </style>
 <!--<style src="v-calendar/dist/style.css"></style>-->
