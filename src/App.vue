@@ -121,7 +121,7 @@ export default {
     },
     backHomepage: function () {
       this.$store.commit('setHomepage', true);
-      this.$store.commit('setHeaderTitle', 'Graphic Engine');
+      this.$store.commit('setHeaderTitle', 'Graphics Engine');
       this.$router.push('/userCodeAppPanel');
     },
     typingSearch: function () {

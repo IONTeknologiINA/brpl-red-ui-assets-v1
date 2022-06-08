@@ -325,13 +325,17 @@ export default {
 @import '@vueform/multiselect/themes/default.css';
 @import 'v-calendar/dist/style.css';
 
-:deep(.vc-svg-icon) {
-  margin-top: 5px;
+:deep(.vc-pane) {
+  padding: 4px 8px 0px 8px;
+}
+
+:deep(.vc-arrow) {
+  margin: 8px 8px 0 8px;
 }
 
 :deep(.vc-header) {
   padding-top: 15px;
-  padding-bottom: 8px;
+  padding-bottom: 9px;
 }
 
 :deep(.vc-title) {
@@ -346,11 +350,18 @@ export default {
   font-family: Arial, sans-serif;
   font-size: 0.75rem;
   padding-bottom: 12px;
+  color: #0d9488;
 }
+
+:deep(.vc-weekday:first-child) {
+  color: #dc2626;
+}
+
 
 :deep(.vc-day-content) {
   font-family: Arial, sans-serif;
   font-size: 0.77rem;
+  font-weight: 500;
 }
 
 :deep(.vc-nav-item) {
