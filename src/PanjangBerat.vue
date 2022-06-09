@@ -145,10 +145,17 @@
           </div>
 
 
-          <div class="flex w-full pt-2.5">
+          <div class="flex w-full pt-2.5 space-x-3">
             <button @click="generate"
-                    class="w-full px-4 py-3 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring">
+                    class="w-full px-4 py-2.5 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring">
               Generate Grafik
+            </button>
+
+            <button @click="resetAll"
+                    class="flex items-center w-12 py-2.5 py-3 text-xs font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+              </svg>
             </button>
           </div>
         </div>
@@ -161,7 +168,7 @@
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 import Multiselect from '@vueform/multiselect';
-import {toRaw} from 'vue';
+import {toRaw, ref } from 'vue';
 import {DatePicker} from 'v-calendar';
 
 export default {
@@ -214,7 +221,6 @@ export default {
       return {start: null, end: null};
     },
     onDateRangeOpened: function () {
-      console.log('focus on input date')
       this.dateRangeOpened = true;
       this.dateRangeDayClicked = 0;
     },
@@ -225,7 +231,7 @@ export default {
       }
     },
     resetAll: function () {
-      this.resetRangeDate();
+      this.selectedDateRange = ref(this.resetRangeDate());
       this.resetWpp();
     },
 
