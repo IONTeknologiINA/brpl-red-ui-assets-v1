@@ -22,7 +22,7 @@
 
 
         <div class="pl-6 pr-4 mt-6 mb-0 space-y-5 rounded-lg ">
-          <p class="text-lg font-medium pl-1">Masukan parameter</p>
+<!--          <p class="text-xl font-medium pl-1">Masukan parameter</p>-->
 
           <div>
             <label for="date-range" class="text-xs font-medium pl-1">Rentang Tanggal</label>
@@ -40,7 +40,7 @@
                       class="bg-white w-full py-3 px-4 text-xs border-gray-200 rounded shadow-sm outline-white"
                       :value="formatDateRange(inputValue)"
                       v-on="inputEvents.end"
-                      @click="onDateRangeOpened"
+                      @focus="onDateRangeOpened"
                   />
                 </template>
               </DatePicker>
@@ -79,13 +79,13 @@
           </div>
 
           <div>
-            <label for="location" class="text-xs font-medium pl-1">Lokasi Pendaratan</label>
+            <label for="location" class="text-xs font-medium pl-1">Lokasi Pendaratan/Sampling</label>
 
             <div class="relative mt-1">
               <Multiselect
                   no-results-text="Tidak ditemukan"
                   no-options-text="Data kosong"
-                  placeholder="Pilih lokasi sampling"
+                  placeholder="Pilih lokasi pendaratansampling"
                   v-model="selectedLocation"
                   ref="location"
                   @click="locationFocused()"
@@ -115,9 +115,13 @@
 
             <div class="relative mt-1">
               <Multiselect
+                  placeholder="Pilih nama spesies"
+                  no-results-text="Tidak ditemukan"
+                  no-options-text="Data kosong"
                   v-model="selectedSpecies"
                   mode="tags"
                   ref="species"
+                  @click="speciesFocused"
                   :classes="{
                     clearIcon: '',
                     container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer bg-white rounded  outline-none py-2 pl-2 pr-0 text-xs shadow-sm',
@@ -129,14 +133,13 @@
                     noOptions: 'py-2 px-3 text-red-500 bg-white text-left',
                     noResults: 'py-2 px-3 text-red-500 bg-white text-left',
                   }"
-                  placeholder="Pilih nama spesies"
-                  no-results-text="Tidak ditemukan"
-                  no-options-text="Data kosong"
-                  :close-on-select="false"
-                  :searchable="true"
                   :create-option="false"
+                  :filter-results="true"
+                  :searchable="true"
+                  :resolve-on-load="false"
                   :clear-on-select="false"
-                  :options="species"
+                  :delay="speciesFetched ? -1 : (shouldSpeciesRetrieve ? 0 : -1)"
+                  :options="getSpecies"
               />
             </div>
           </div>
@@ -176,8 +179,6 @@ export default {
       canceled: false,
       insertingImage: false,
 
-      selectedSpecies: [],
-
       selectedDateRange: this.resetRangeDate(),
       dateRangeOpened: false,
       dateRangeDayClicked: 0,
@@ -191,6 +192,10 @@ export default {
       selectedLocation: '',
       shouldLocationRetrieve: false,
       locationFetched: false,
+
+      selectedSpecies: [],
+      shouldSpeciesRetrieve: false,
+      speciesFetched: false,
 
       species: [
         {value: 'Layang', label: 'Layang'},
@@ -209,6 +214,7 @@ export default {
       return {start: null, end: null};
     },
     onDateRangeOpened: function () {
+      console.log('focus on input date')
       this.dateRangeOpened = true;
       this.dateRangeDayClicked = 0;
     },
@@ -216,14 +222,18 @@ export default {
       this.dateRangeDayClicked++;
       if (this.dateRangeDayClicked % 2 === 0) {
         this.resetWpp();
-        this.resetLocation();
       }
+    },
+    resetAll: function () {
+      this.resetRangeDate();
+      this.resetWpp();
     },
 
     resetWpp: function () {
       this.shouldWppRetrieve = true;
       this.wppFetched = false;
       this.selectedWpp = '';
+      this.resetLocation();
     },
     wppFocused: function () {
       if (!this.wppFetched && this.shouldWppRetrieve) {
@@ -231,7 +241,7 @@ export default {
       }
     },
     getWpp: async function () {
-      const {data} = await this.axios.post(`${this.$store.state.host}/cpue/wpp`, toRaw(this.selectedDateRange));
+      const {data} = await this.axios.post(`${this.$store.state.host}/hubungan_panjang_berat/wpp`, toRaw(this.selectedDateRange));
       this.wppFetched = true;
       return data;
     },
@@ -243,6 +253,7 @@ export default {
       this.shouldLocationRetrieve = true;
       this.locationFetched = false;
       this.selectedLocation = '';
+      this.resetSpecies();
     },
     locationFocused: function () {
       if (!this.locationFetched && this.shouldLocationRetrieve) {
@@ -250,7 +261,7 @@ export default {
       }
     },
     getLocations: async function () {
-      const {data} = await this.axios.post(`${this.$store.state.host}/cpue/locations`, {
+      const {data} = await this.axios.post(`${this.$store.state.host}/hubungan_panjang_berat/locations`, {
         ...toRaw(this.selectedDateRange),
         wpp: this.selectedWpp
       });
@@ -258,50 +269,64 @@ export default {
       return data;
     },
     onLocationChanged: function () {
-      console.log(this.selectedWpp)
+      this.resetSpecies();
+    },
+
+
+    resetSpecies: function () {
+      this.shouldSpeciesRetrieve = true;
+      this.speciesFetched = false;
+      this.$refs.species.clear();
+      this.$refs.species.clearSearch();
+      // this.selectedSpecies = [];
+    },
+    speciesFocused: function () {
+      if (!this.speciesFetched && this.shouldSpeciesRetrieve) {
+        this.$refs.species.refreshOptions();
+      }
+    },
+    getSpecies: async function () {
+      const {data} = await this.axios.post(`${this.$store.state.host}/hubungan_panjang_berat/species`, {
+        ...toRaw(this.selectedDateRange),
+        wpp: this.selectedWpp,
+        location: this.selectedLocation
+      });
+      this.speciesFetched = true;
+      return data;
     },
 
 
     formToObject: function () {
+      const {start, end} = toRaw(this.selectedDateRange);
       return {
-        year: Number(this.selectedYear),
-        wpp: Number(this.selectedWpp),
-        species: toRaw(this.selectedSpecies),
+        start, end,
+        wpp: this.selectedWpp,
         location: this.selectedLocation,
-        dateRange: toRaw(this.selectedDateRange)
+        species: toRaw(this.selectedSpecies)
       }
     },
 
-    reset: function () {
-      this.selectedYear = '';
-      this.selectedWpp = {name: '571'};
-      this.selectedSpecies = '';
-      this.selectedLocation = '';
-      this.selectedDateRange = {
-        start: null,
-        end: null
-      };
-    },
     generate: async function () {
       this.tryingAt++;
-      // const iteration = this.tryingAt;
+      const iteration = this.tryingAt;
       this.graphicImageName = '';
       this.loading = true;
       this.canceled = false;
       this.insertingImage = false;
       this.$store.commit('setSearchText', '');
-      this.selectedLocation = '';
 
       const body = this.formToObject();
       console.log(body);
 
       setTimeout(() => {
-        this.insertingImage = false;
-        this.loading = false;
-        this.$notify({
-          title: 'Grafik berhasil disisipkan!',
-          type: 'success'
-        });
+        if (iteration === this.tryingAt && !this.canceled) {
+          this.insertingImage = false;
+          this.loading = false;
+          this.$notify({
+            title: 'Grafik berhasil disisipkan!',
+            type: 'success'
+          });
+        }
       }, 2000);
 
 

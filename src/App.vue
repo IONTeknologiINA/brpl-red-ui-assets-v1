@@ -90,12 +90,12 @@
       </div>
     </header>
     <main class="relative w-full h-full bg-grey-100 z-30">
-      <div class="max-h-screen overflow-y-auto w-full bg-gray-100">
+      <div class="max-h-screen overflow-y-auto w-full h-full bg-gray-100">
         <router-view/>
       </div>
 
     </main>
-    <footer class="fixed bottom-0 z-40 w-full py-3 px-6 bg-gray-600 text-xs text-start text-white">
+    <footer class="fixed bottom-0 z-30 w-full py-3 px-6 bg-gray-600 text-xs text-start text-white">
       <button @click="myMenu">Report Engine Developer ©2022</button>
     </footer>
   </div>
