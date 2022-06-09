@@ -17,14 +17,18 @@
              :opacity="0.9"
              :is-full-page="true"/>
     <div class="max-w-screen-xl mx-auto">
-
       <div class="max-w-lg mx-auto">
 
-
         <div class="pl-6 pr-4 mt-6 mb-0 space-y-5 rounded-lg ">
-<!--          <p class="text-xl font-medium pl-1">Masukan parameter</p>-->
-
-          <div>
+          <div class="flex-col">
+            <div class="flex flex-row text-gray-700 item-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                   stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+              <span class="text-base ml-2 font-medium pl-1 pb-4 ">Parameter Grafik</span>
+            </div>
             <label for="date-range" class="text-xs font-medium pl-1">Rentang Tanggal</label>
             <div class="relative mt-1">
               <DatePicker v-model="selectedDateRange"
@@ -37,7 +41,7 @@
                 <template v-slot="{ inputValue, inputEvents }">
                   <input
                       placeholder="Masukan rentang tanggal"
-                      class="bg-white w-full py-3 px-4 text-xs border-gray-200 rounded shadow-sm outline-white"
+                      class="bg-white w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm focus:ring-2 outline-none"
                       :value="formatDateRange(inputValue)"
                       v-on="inputEvents.end"
                       @focus="onDateRangeOpened"
@@ -60,13 +64,14 @@
                   @change="onWppChanged($event)"
                   :classes="{
                     clearIcon: '',
-                    container: 'border-gray-200 relative mx-auto w-full flex items-center justify-end box-border cursor-pointer  outline-none py-3 pl-2 pr-0 text-xs shadow-sm',
+                    container: 'rounded-lg border-gray-200 relative mx-auto w-full flex items-center justify-end box-border cursor-pointer  py-3 pl-2 pr-0 text-xs shadow-sm',
                     dropdown: 'max-h-60 min-h-60 z-40 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll bg-white flex flex-col rounded-b',
                     dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
                     dropdownHidden: 'hidden',
                     caret: 'bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none rtl:mr-0 rtl:ml-3.5',
                     noOptions: 'py-2 px-3 text-red-500 bg-white text-left',
                     noResults: 'py-2 px-3 text-red-500 bg-white text-left',
+                    search: 'rounded-lg w-full absolute inset-0 focus:ring-2 outline-none appearance-none box-border border-0 text-base font-sans bg-white pl-3.5 rtl:pl-0 rtl:pr-3.5',
                   }"
                   :filter-results="true"
                   :searchable="true"
@@ -85,20 +90,21 @@
               <Multiselect
                   no-results-text="Tidak ditemukan"
                   no-options-text="Data kosong"
-                  placeholder="Pilih lokasi pendaratansampling"
+                  placeholder="Pilih lokasi pendaratan/sampling"
                   v-model="selectedLocation"
                   ref="location"
                   @click="locationFocused()"
                   @change="onLocationChanged()"
                   :classes="{
                     clearIcon: '',
-                    container: 'border-gray-200 relative mx-auto w-full flex items-center justify-end box-border cursor-pointer  outline-none py-3 pl-2 pr-0 text-xs shadow-sm',
+                    container: 'border-gray-200 relative mx-auto w-full flex items-center justify-end box-border cursor-pointer  outline-none rounded-lg py-3 pl-2 pr-0 text-xs shadow-sm',
                     dropdown: 'max-h-60 min-h-60 z-40 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll bg-white flex flex-col rounded-b',
                     dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
                     dropdownHidden: 'hidden',
                     caret: 'bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none rtl:mr-0 rtl:ml-3.5',
                     noOptions: 'py-2 px-3 text-red-500 bg-white text-left',
                     noResults: 'py-2 px-3 text-red-500 bg-white text-left',
+                    search: 'w-full absolute inset-0 focus:ring-2 outline-none appearance-none box-border border-0 text-base font-sans bg-white rounded-lg pl-3.5 rtl:pl-0 rtl:pr-3.5',
                   }"
                   :filter-results="true"
                   :searchable="true"
@@ -112,7 +118,6 @@
 
           <div>
             <label for="spesies" class="text-xs font-medium pl-1">Spesies</label>
-
             <div class="relative mt-1">
               <Multiselect
                   placeholder="Pilih nama spesies"
@@ -124,22 +129,40 @@
                   @click="speciesFocused"
                   :classes="{
                     clearIcon: '',
-                    container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer bg-white rounded  outline-none py-2 pl-2 pr-0 text-xs shadow-sm',
-                    dropdown: 'max-h-60 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                    container: 'border-1 hover:ring-2 relative mx-auto w-full flex items-center justify-end box-border cursor-pointer bg-white rounded-lg focus:outline-blue-400 py-2 pl-2 pr-0 text-xs shadow-sm',
+                    dropdown: 'max-h-60 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll z-40 bg-white flex flex-col rounded-b',
                     dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
                     dropdownHidden: 'hidden',
                     caret: 'bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none rtl:mr-0 rtl:ml-3.5',
-                    tagsSearch: 'absolute inset-0 border-0 outline-none -ml-1.5 focus:ring-0 appearance-none p-0 text-xs box-border w-full',
+                    tagsSearch: 'absolute outline-none inset-0 border-1 -ml-1.5 focus:ring-0 appearance-none  text-xs box-border w-full',
                     noOptions: 'py-2 px-3 text-red-500 bg-white text-left',
                     noResults: 'py-2 px-3 text-red-500 bg-white text-left',
+                    tagsSearchWrapper: 'inline-block relative mx-1 mb-1 flex-grow flex-shrink h-full outline-blue-400',
+                    tagSearch: 'w-full absolute inset-0 outline-blue-400 appearance-none box-border border-0 text-base font-sans bg-white rounded pl-3.5 rtl:pl-0 rtl:pr-3.5',
                   }"
                   :create-option="false"
                   :filter-results="true"
                   :searchable="true"
                   :resolve-on-load="false"
                   :clear-on-select="false"
+                  :close-on-select="false"
                   :delay="speciesFetched ? -1 : (shouldSpeciesRetrieve ? 0 : -1)"
                   :options="getSpecies"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label for="min-length" class="text-xs font-medium">Panjang Minimal</label>
+            <div class="relative mt-1">
+              <input
+                  v-model="selectedMinLength"
+                  type="text"
+                  autocomplete="off"
+                  id="min-length"
+                  v-maska="numberMask"
+                  class="w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm focus:ring-2 outline-none"
+                  placeholder="Inputkan panjang minimal"
               />
             </div>
           </div>
@@ -154,7 +177,9 @@
             <button @click="resetAll"
                     class="flex items-center w-12 py-2.5 py-3 text-xs font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                <path fill-rule="evenodd"
+                      d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+                      clip-rule="evenodd"/>
               </svg>
             </button>
           </div>
@@ -168,7 +193,7 @@
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 import Multiselect from '@vueform/multiselect';
-import {toRaw, ref } from 'vue';
+import {toRaw, ref} from 'vue';
 import {DatePicker} from 'v-calendar';
 
 export default {
@@ -179,12 +204,21 @@ export default {
     Multiselect,
     DatePicker
   },
+  directives: {},
   data() {
     return {
       tryingAt: 0,
       loading: false,
       canceled: false,
       insertingImage: false,
+      numberMask: {
+        mask: ['H cm', 'HH cm', 'HHH cm', 'HHHH cm', 'HHHHH cm', 'HHHHHH cm'],
+        tokens: {
+          'H': {
+            pattern: /^\d*\.?\d*$/
+          }
+        }
+      },
 
       selectedDateRange: this.resetRangeDate(),
       dateRangeOpened: false,
@@ -204,13 +238,7 @@ export default {
       shouldSpeciesRetrieve: false,
       speciesFetched: false,
 
-      species: [
-        {value: 'Layang', label: 'Layang'},
-        {value: 'Kembung', label: 'Kembung'},
-        {value: 'Rajungan', label: 'Rajungan'},
-        {value: 'Lobster Batik', label: 'Lobster Batik'},
-      ],
-
+      selectedMinLength: '',
     }
   },
   methods: {

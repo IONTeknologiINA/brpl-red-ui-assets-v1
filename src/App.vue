@@ -50,7 +50,7 @@
 
           <div v-if="!$store.state.search">
             <h4 v-if="$store.state.homepage" class="red-title text-lg font-medium">{{ $store.state.headerTitle }}</h4>
-            <h4 v-if="!$store.state.homepage" class="red-title text-base">{{ $store.state.headerTitle }}</h4>
+            <h4 v-if="!$store.state.homepage" class="object-cover red-title text-base">{{ $store.state.headerTitle }}</h4>
           </div>
         </div>
 
@@ -76,15 +76,15 @@
             </svg>
           </button>
 
-          <button v-if="!$store.state.homepage" @click="myMenu">
-            <svg id="eUKOTMbWute1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                 viewBox="0 0 24 29" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" width="24"
-                 height="29">
-              <ellipse rx="2.901147" ry="2.9" transform="translate(17.165639 4.655885)" fill="#fff" stroke-width="0"/>
-              <ellipse rx="2.901147" ry="2.9" transform="translate(17.165639 14.5)" fill="#fff" stroke-width="0"/>
-              <ellipse rx="2.901147" ry="2.9" transform="translate(17.165639 24.34)" fill="#fff" stroke-width="0"/>
-            </svg>
-          </button>
+<!--          <button v-if="!$store.state.homepage" @click="myMenu">-->
+<!--            <svg id="eUKOTMbWute1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"-->
+<!--                 viewBox="0 0 24 29" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" width="24"-->
+<!--                 height="29">-->
+<!--              <ellipse rx="2.901147" ry="2.9" transform="translate(17.165639 4.655885)" fill="#fff" stroke-width="0"/>-->
+<!--              <ellipse rx="2.901147" ry="2.9" transform="translate(17.165639 14.5)" fill="#fff" stroke-width="0"/>-->
+<!--              <ellipse rx="2.901147" ry="2.9" transform="translate(17.165639 24.34)" fill="#fff" stroke-width="0"/>-->
+<!--            </svg>-->
+<!--          </button>-->
         </div>
 
       </div>
