@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 mt-20 pt-1 pb-5 mb-10 bg-gray-100 h-full">
+  <div class="flex-1 mt-20 pt-1 pb-5 mb-10  bg-gray-100 h-full">
     <button v-if="loading && !insertingImage" style="z-index: 10000"
             @click="onCancel"
             class="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-3 py-2 text-xs mb-12 font-medium text-white bg-red-500 rounded-lg hover:bg-red-700 focus:ring">
@@ -21,39 +21,93 @@
       <div class="max-w-lg mx-auto">
 
 
-        <div class="px-6 mt-6 mb-0 space-y-5 rounded-lg ">
+        <div class="pl-6 pr-4 mt-6 mb-0 space-y-5 rounded-lg ">
           <p class="text-lg font-medium pl-1">Masukan parameter</p>
 
           <div>
-            <label for="tahun" class="text-xs font-medium pl-1">Tahun</label>
-            <Multiselect
-                placeholder="Pilih Tahun"
-                v-model="selectedYear"
-                :classes="{
-                    clearIcon: '',
-                    container: 'bg-white relative mx-auto w-full flex items-center justify-end box-border cursor-pointer bg-white rounded  outline-none py-3 pl-2 pr-0 text-xs shadow-sm',
-                    dropdown: 'max-h-60 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                    dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
-                    dropdownHidden: 'hidden',
-                }"
-                :options="years"
-            />
+            <label for="date-range" class="text-xs font-medium pl-1">Rentang Tanggal</label>
+            <div class="relative mt-1">
+              <DatePicker v-model="selectedDateRange"
+                          :popover="{ visibility: 'click' }"
+                          :max-date="new Date()"
+                          @dayclick="onDateRangeChanged"
+                          :model-config="dateRangeConfig"
+                          locale="id-ID"
+                          :masks="dateRangeMasks" is-range>
+                <template v-slot="{ inputValue, inputEvents }">
+                  <input
+                      placeholder="Masukan rentang tanggal"
+                      class="bg-white w-full py-3 px-4 text-xs border-gray-200 rounded shadow-sm outline-white"
+                      :value="formatDateRange(inputValue)"
+                      v-on="inputEvents.end"
+                      @click="onDateRangeOpened"
+                  />
+                </template>
+              </DatePicker>
+            </div>
           </div>
 
           <div>
             <label for="wpp" class="text-xs font-medium pl-1">WPP</label>
-            <Multiselect
-                placeholder="Pilih WPP"
-                v-model="selectedWpp"
-                :classes="{
+            <div class="relative mt-1">
+              <Multiselect
+                  no-results-text="Tidak ditemukan"
+                  no-options-text="Data kosong"
+                  placeholder="Pilih WPP"
+                  v-model="selectedWpp"
+                  ref="wpp"
+                  @click="wppFocused()"
+                  @change="onWppChanged($event)"
+                  :classes="{
                     clearIcon: '',
-                    container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer bg-white rounded  outline-none py-3 pl-2 pr-0 text-xs shadow-sm',
-                    dropdown: 'max-h-60 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
+                    container: 'border-gray-200 relative mx-auto w-full flex items-center justify-end box-border cursor-pointer  outline-none py-3 pl-2 pr-0 text-xs shadow-sm',
+                    dropdown: 'max-h-60 min-h-60 z-40 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll bg-white flex flex-col rounded-b',
                     dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
                     dropdownHidden: 'hidden',
+                    caret: 'bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none rtl:mr-0 rtl:ml-3.5',
+                    noOptions: 'py-2 px-3 text-red-500 bg-white text-left',
+                    noResults: 'py-2 px-3 text-red-500 bg-white text-left',
                   }"
-                :options="wpp"
-            />
+                  :filter-results="true"
+                  :searchable="true"
+                  :resolve-on-load="false"
+                  :clear-on-select="false"
+                  :delay="wppFetched ? -1 : (shouldWppRetrieve ? 0 : -1)"
+                  :options="getWpp"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label for="location" class="text-xs font-medium pl-1">Lokasi Pendaratan</label>
+
+            <div class="relative mt-1">
+              <Multiselect
+                  no-results-text="Tidak ditemukan"
+                  no-options-text="Data kosong"
+                  placeholder="Pilih lokasi sampling"
+                  v-model="selectedLocation"
+                  ref="location"
+                  @click="locationFocused()"
+                  @change="onLocationChanged()"
+                  :classes="{
+                    clearIcon: '',
+                    container: 'border-gray-200 relative mx-auto w-full flex items-center justify-end box-border cursor-pointer  outline-none py-3 pl-2 pr-0 text-xs shadow-sm',
+                    dropdown: 'max-h-60 min-h-60 z-40 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll bg-white flex flex-col rounded-b',
+                    dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
+                    dropdownHidden: 'hidden',
+                    caret: 'bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none rtl:mr-0 rtl:ml-3.5',
+                    noOptions: 'py-2 px-3 text-red-500 bg-white text-left',
+                    noResults: 'py-2 px-3 text-red-500 bg-white text-left',
+                  }"
+                  :filter-results="true"
+                  :searchable="true"
+                  :resolve-on-load="false"
+                  :clear-on-select="false"
+                  :delay="locationFetched ? -1 : (shouldLocationRetrieve ? 0 : -1)"
+                  :options="getLocations"
+              />
+            </div>
           </div>
 
           <div>
@@ -63,12 +117,14 @@
               <Multiselect
                   v-model="selectedSpecies"
                   mode="tags"
+                  ref="species"
                   :classes="{
                     clearIcon: '',
                     container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer bg-white rounded  outline-none py-2 pl-2 pr-0 text-xs shadow-sm',
                     dropdown: 'max-h-60 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
                     dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
                     dropdownHidden: 'hidden',
+                    caret: 'bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none rtl:mr-0 rtl:ml-3.5',
                     tagsSearch: 'absolute inset-0 border-0 outline-none -ml-1.5 focus:ring-0 appearance-none p-0 text-xs box-border w-full',
                     noOptions: 'py-2 px-3 text-red-500 bg-white text-left',
                     noResults: 'py-2 px-3 text-red-500 bg-white text-left',
@@ -85,49 +141,6 @@
             </div>
           </div>
 
-          <div>
-            <label for="lokasi" class="text-xs font-medium pl-1">Lokasi Pendaratan</label>
-
-            <div class="relative mt-1">
-              <Multiselect
-                  no-results-text="Tidak ditemukan"
-                  no-options-text="Data kosong"
-                  placeholder="Pilih lokasi sampling"
-                  v-model="selectedLocation"
-                  :classes="{
-                    clearIcon: '',
-                    container: 'border-gray-200 relative mx-auto w-full flex items-center justify-end box-border cursor-pointer  outline-none py-3 pl-2 pr-0 text-xs shadow-sm',
-                    dropdown: 'max-h-60 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll z-50 bg-white flex flex-col rounded-b',
-                    dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
-                    dropdownHidden: 'hidden',
-                    noOptions: 'py-2 px-3 text-red-500 bg-white text-left',
-                    noResults: 'py-2 px-3 text-red-500 bg-white text-left',
-                  }"
-                  :filter-results="true"
-                  :searchable="true"
-                  :options="locations"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label for="date-range" class="text-xs font-medium">Rentang Tanggal</label>
-
-            <div class="relative mt-1">
-              <DatePicker v-model="selectedDateRange"
-                          :max-date="new Date()"
-                          :masks="dateRangeMasks" is-range>
-                <template v-slot="{ inputValue, inputEvents }">
-                  <input
-                      placeholder="Masukan rentang tanggal"
-                      class="bg-white w-full py-3 px-4 text-xs border-gray-200 rounded shadow-sm outline-white"
-                      :value="dateRange(inputValue)"
-                      v-on="inputEvents.end"
-                  />
-                </template>
-              </DatePicker>
-            </div>
-          </div>
 
           <div class="flex w-full pt-2.5">
             <button @click="generate"
@@ -162,56 +175,93 @@ export default {
       loading: false,
       canceled: false,
       insertingImage: false,
-      selectedWpp: '',
-      selectedYear: {year: 2020},
+
       selectedSpecies: [],
+
+      selectedDateRange: this.resetRangeDate(),
+      dateRangeOpened: false,
+      dateRangeDayClicked: 0,
+      dateRangeMasks: {title: 'MMMM YYYY', input: 'DD MMMM YYYY'},
+      dateRangeConfig: {type: 'string', mask: 'YYYY-MM-DD',},
+
+      selectedWpp: '',
+      shouldWppRetrieve: false,
+      wppFetched: false,
+
       selectedLocation: '',
-      selectedDateRange: this.resetDateRange(),
-      dateRangeMasks: {input: 'DD/MM/YYYY',},
-      wpp: [
-        '571',
-        '572',
-        '573',
-        '711',
-        '712',
-        '713',
-        '714',
-        '715',
-        '716',
-        '717',
-        '718',
-      ],
-      years: [
-        2016,
-        2017,
-        2018,
-        2019,
-        2020,
-        2021,
-        2022,
-      ],
-      locations: [
-        {value: 'Margasari', label: 'Margasari'},
-        {value: 'Kuala Teladas', label: 'Kuala Teladas'},
-        {value: 'Pasar Baru', label: 'Pasar Baru'},
-        {value: 'PPI Ujong Baroh Aceh', label: 'PPI Ujong Baroh Aceh'},
-        {value: 'PPI Pomako', label: 'PPI Pomako'},
-      ],
+      shouldLocationRetrieve: false,
+      locationFetched: false,
+
       species: [
         {value: 'Layang', label: 'Layang'},
         {value: 'Kembung', label: 'Kembung'},
         {value: 'Rajungan', label: 'Rajungan'},
         {value: 'Lobster Batik', label: 'Lobster Batik'},
       ],
-      graphicImageName: ''
+
     }
   },
   methods: {
-    maxDate: function () {
-      let date = new Date();
-      date.setDate(date.getDate() + 1);
-      return date;
+    formatDateRange: function (value) {
+      return value.start && value.start ? `${value.start} - ${value.end}` : '';
     },
+    resetRangeDate: function () {
+      return {start: null, end: null};
+    },
+    onDateRangeOpened: function () {
+      this.dateRangeOpened = true;
+      this.dateRangeDayClicked = 0;
+    },
+    onDateRangeChanged: function () {
+      this.dateRangeDayClicked++;
+      if (this.dateRangeDayClicked % 2 === 0) {
+        this.resetWpp();
+        this.resetLocation();
+      }
+    },
+
+    resetWpp: function () {
+      this.shouldWppRetrieve = true;
+      this.wppFetched = false;
+      this.selectedWpp = '';
+    },
+    wppFocused: function () {
+      if (!this.wppFetched && this.shouldWppRetrieve) {
+        this.$refs.wpp.refreshOptions();
+      }
+    },
+    getWpp: async function () {
+      const {data} = await this.axios.post(`${this.$store.state.host}/cpue/wpp`, toRaw(this.selectedDateRange));
+      this.wppFetched = true;
+      return data;
+    },
+    onWppChanged: function () {
+      this.resetLocation();
+    },
+
+    resetLocation: function () {
+      this.shouldLocationRetrieve = true;
+      this.locationFetched = false;
+      this.selectedLocation = '';
+    },
+    locationFocused: function () {
+      if (!this.locationFetched && this.shouldLocationRetrieve) {
+        this.$refs.location.refreshOptions();
+      }
+    },
+    getLocations: async function () {
+      const {data} = await this.axios.post(`${this.$store.state.host}/cpue/locations`, {
+        ...toRaw(this.selectedDateRange),
+        wpp: this.selectedWpp
+      });
+      this.locationFetched = true;
+      return data;
+    },
+    onLocationChanged: function () {
+      console.log(this.selectedWpp)
+    },
+
+
     formToObject: function () {
       return {
         year: Number(this.selectedYear),
@@ -221,6 +271,7 @@ export default {
         dateRange: toRaw(this.selectedDateRange)
       }
     },
+
     reset: function () {
       this.selectedYear = '';
       this.selectedWpp = {name: '571'};
@@ -239,6 +290,8 @@ export default {
       this.canceled = false;
       this.insertingImage = false;
       this.$store.commit('setSearchText', '');
+      this.selectedLocation = '';
+
       const body = this.formToObject();
       console.log(body);
 
@@ -249,7 +302,7 @@ export default {
           title: 'Grafik berhasil disisipkan!',
           type: 'success'
         });
-      }, 3000);
+      }, 2000);
 
 
       // this.axios.post(`${this.$store.state.host}/execute-graphic/panjang_x_berat`, body)
@@ -310,12 +363,6 @@ export default {
         title: 'Grafik tidak berhasil digenerate.',
         type: 'error'
       });
-    },
-    dateRange: function (value) {
-      return value.start && value.start ? `${value.start} - ${value.end}` : '';
-    },
-    resetDateRange: function () {
-      return {start: null, end: null};
     }
   }
 }
@@ -327,6 +374,7 @@ export default {
 
 :deep(.vc-pane) {
   padding: 4px 8px 0px 8px;
+
 }
 
 :deep(.vc-arrow) {
@@ -343,7 +391,8 @@ export default {
 }
 
 :deep(.vc-weeks) {
-  /*margin-top: 30px;*/
+  margin-top: 10px;
+  /*z-index: 5000;*/
 }
 
 :deep(.vc-weekday) {
@@ -356,7 +405,6 @@ export default {
 :deep(.vc-weekday:first-child) {
   color: #dc2626;
 }
-
 
 :deep(.vc-day-content) {
   font-family: Arial, sans-serif;

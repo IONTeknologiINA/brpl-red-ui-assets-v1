@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 mt-20 pt-5 pb-5 mb-10 px-5 bg-gray-100">
+  <div class="flex-1 mt-20 pt-5 pb-5 mb-10 pl-5 pr-3 bg-gray-100">
     <div v-for="(graphic, index) in renderedGraphics" :key="graphic.graphic"
          class="relative block py-5 px-6 overflow-hidden border border-gray-100 rounded-lg bg-white"
          :class="index > 0 ? 'mt-5' : ''"
