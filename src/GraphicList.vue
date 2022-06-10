@@ -50,7 +50,7 @@ export default {
           graphic: 'Hubungan Panjang Berat',
           description: 'Grafik yang digunakan untuk mensimulasikan hasil perhitungan hubungan panjang dan berat.',
           createText: 'Buat Grafik',
-          url: '/panjang-berat',
+          url: '/hubungan-panjang-berat',
           createStatus: true
         },
         {
