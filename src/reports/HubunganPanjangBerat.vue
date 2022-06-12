@@ -17,9 +17,10 @@
              :opacity="0.9"
              :is-full-page="true"/>
     <div class="max-w-screen-xl mx-auto">
+      <input ref="toTop" autocomplete="off" class="h-0 -mt-10"/>
       <div class="max-w-lg mx-auto">
 
-        <div class="pl-6 pr-4 mt-6 mb-0 space-y-5 rounded-lg ">
+        <div class="pl-6 pr-4 mb-0 space-y-5 rounded-lg ">
           <div class="flex-col">
             <div class="flex flex-row text-gray-700 item-center justify-between">
 <!--              <span></span>-->
@@ -293,7 +294,7 @@
                       class="w-full flex flex-row px-4 py-2.5 text-left text-xs font-medium text-white
                       items-center bg-sky-600  rounded-lg hover:bg-sky-700 border-2 border-solid focus:border-sky-400">
                 <UilChartLine size="1.25rem" class="text-gray-200 " />
-                <span class="text-gray-200 ml-2">Generate Grafik</span>
+                <span class="text-gray-200 ml-2">Hasilkan Grafik</span>
               </button>
 
               <button @click="resetAll"
@@ -390,6 +391,9 @@ export default {
       selectedMaxWeight: '',
     }
   },
+  mounted() {
+    this.scrollToTop();
+  },
   methods: {
     formatDateRange: function (value) {
       return value.start && value.start ? `${value.start} - ${value.end}` : '';
@@ -408,6 +412,9 @@ export default {
         this.resetWpp();
       }
     },
+    scrollToTop() {
+      this.$refs.toTop.focus();
+    },
     resetAll: function () {
       this.graphicImageName = '';
       this.selectedDateRange = ref(this.resetRangeDate());
@@ -416,6 +423,7 @@ export default {
       this.selectedMaxLength = '';
       this.selectedMinWeight = '';
       this.selectedMaxWeight = '';
+      this.scrollToTop();
     },
 
     wppValue() {
