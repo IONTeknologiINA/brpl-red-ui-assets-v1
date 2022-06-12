@@ -16,12 +16,28 @@ const weightMasker = {
     }
 };
 
+
+/**
+ * Normalize given string from escaped character
+ * @param str
+ * @returns {number}
+ */
 function normalizeNumber(str) {
     return +str.replace(/[^\d.-]/g, '');
+}
+
+/**
+ * Utilities to delay some process
+ * @param ms
+ * @returns {Promise<unknown>}
+ */
+function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 module.exports = {
     normalizeNumber,
     lengthMasker,
-    weightMasker
+    weightMasker,
+    delay
 }

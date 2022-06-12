@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full bg-gray-100">
     <notifications position="bottom right"/>
-    <header class="fixed w-full top-0 z-50 py-5 bg-blue-600 text-white text-center">
+    <header class="fixed w-full top-0 z-50 py-5 bg-sky-600 text-white text-center">
       <div class="flex items-center justify-between flex-1 gap-8 sm:justify-end px-5">
 
         <div v-if="$store.state.search" class="relative mt-1 w-full">
@@ -95,7 +95,7 @@
       </div>
 
     </main>
-    <footer class="fixed bottom-0 z-30 w-full py-3 px-6 bg-gray-600 text-xs text-start text-white">
+    <footer class="fixed bottom-0 z-30 w-full py-3 px-6 bg-gray-400 text-xs text-start text-white">
       <button @click="myMenu">Report Engine Developer ©2022</button>
     </footer>
   </div>
@@ -135,6 +135,9 @@ export default {
 </script>
 
 <style>
+@import '@vueform/multiselect/themes/default.css';
+@import 'v-calendar/dist/style.css';
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

@@ -29,7 +29,7 @@
               </svg>
               <span class="text-base ml-2 font-medium pl-1 pb-4 ">Parameter Grafik</span>
             </div>
-            <label for="date-range" class="text-xs font-medium pl-1">Rentang Tanggal</label>
+            <label for="date-range" class="text-xs font-medium pl-1 text-gray-600">Rentang Tanggal</label>
             <div class="relative mt-1">
               <DatePicker v-model="selectedDateRange"
                           :popover="{ visibility: 'click' }"
@@ -41,7 +41,7 @@
                 <template v-slot="{ inputValue, inputEvents }">
                   <input
                       placeholder="Masukan rentang tanggal"
-                      class="bg-white w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm focus:ring-2 outline-none"
+                      class="bg-white w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm outline-sky-400 focus-within:outline-sky-400"
                       :value="formatDateRange(inputValue)"
                       v-on="inputEvents.end"
                       @focus="onDateRangeOpened"
@@ -52,149 +52,179 @@
           </div>
 
           <div>
-            <label for="wpp" class="text-xs font-medium pl-1">WPP</label>
+            <label for="wpp" class="text-xs font-medium pl-1 text-gray-600">WPP</label>
             <div class="relative mt-1">
               <Multiselect
+                  placeholder="Pilih wpp"
                   no-results-text="Tidak ditemukan"
                   no-options-text="Data kosong"
-                  placeholder="Pilih WPP"
                   v-model="selectedWpp"
                   ref="wpp"
-                  @click="wppFocused()"
-                  @change="onWppChanged($event)"
-                  :classes="{
-                    clearIcon: '',
-                    container: 'rounded-lg border-gray-200 relative mx-auto w-full flex items-center justify-end box-border cursor-pointer  py-3 pl-2 pr-0 text-xs shadow-sm',
-                    dropdown: 'border-gray-300 shadow-sm max-h-60 min-h-60 z-40 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll bg-white flex flex-col rounded-b',
-                    dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
-                    dropdownHidden: 'hidden',
-                    option: 'first:text-green-600 first:bg-gray-50 first:py-3 first:hover:bg-gray-100 flex items-center justify-start box-border text-left cursor-pointer text-xs leading-snug py-2 px-3',
-                    optionPointed: 'text-gray-800 bg-gray-100',
-                    optionSelected: 'text-gray-700 bg-gray-200',
-                    optionSelectedPointed: 'text-gray-700 bg-gray-300',
-                    caret: 'bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none rtl:mr-0 rtl:ml-3.5',
-                    noOptions: 'py-2 px-3 text-red-500 bg-white text-left',
-                    noResults: 'py-2 px-3 text-red-500 bg-white text-left',
-                    search: 'rounded-lg w-full absolute inset-0 focus:ring-2 outline-none appearance-none box-border border-0 text-xs font-sans bg-white pl-3.5 rtl:pl-0 rtl:pr-3.5',
-                  }"
+                  @click="wppFocused"
+                  :mode="wppTagsMode ? 'tags' : 'multiple'"
+                  :multipleLabel="allWppSelected"
+                  :classes="multiselectClasses(wppFetched, wppTagsMode)"
+                  @change="wppTagCreated($event)"
+                  :create-option="false"
+                  :close-on-select="false"
+                  :groups="true"
                   :filter-results="true"
                   :searchable="true"
                   :resolve-on-load="false"
                   :clear-on-select="false"
                   :delay="wppFetched ? -1 : (shouldWppRetrieve ? 0 : -1)"
                   :options="getWpp"
-              />
+              >
+                <template v-slot:tag="{ option, handleTagRemove }">
+                  <div v-tippy="$tagTooltip(option.label)" class="bg-sky-600 text-gray-100 text-xs font-medium py-1 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap">
+                    <span>{{ $normalizeTag(option.label) }}</span>
+                    <span class="multiselect-tag-remove" @mousedown.prevent="handleTagRemove(option, $event)">
+                      <span class="multiselect-tag-remove-icon"></span>
+                    </span>
+                  </div>
+                </template>
+
+                <!-- To show this slow, plase remove if parameter => "_ctx.hasSelected && !$props.disabled &&" on source code vue multiselect.js -->
+                <template v-if="!wppTagsMode" v-slot:clear>
+                  <UilFileInfoAlt v-tippy="!wppTagsMode ? tippyOnAllSelected(selectedWpp) : ''" size="1.25rem" class="absolute right-3 text-gray-400 outline-none" />
+                </template>
+
+              </Multiselect>
             </div>
           </div>
 
           <div>
-            <label for="resource" class="text-xs font-medium pl-1">Sumber Daya</label>
+            <label for="resource" class="text-xs font-medium pl-1 text-gray-600">Sumber Daya</label>
             <div class="relative mt-1">
               <Multiselect
+                  placeholder="Pilih sumber daya"
                   no-results-text="Tidak ditemukan"
                   no-options-text="Data kosong"
-                  placeholder="Pilih Sumber Daya"
                   v-model="selectedResource"
                   ref="resource"
-                  @click="resourceFocused()"
-                  @change="onResourceChanged($event)"
-                  :classes="{
-                    clearIcon: '',
-                    container: 'rounded-lg border-gray-200 relative mx-auto w-full flex items-center justify-end box-border cursor-pointer  py-3 pl-2 pr-0 text-xs shadow-sm',
-                    dropdown: 'border-gray-300 shadow-lg max-h-60 min-h-60 z-40 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded -mt-px overflow-y-scroll bg-white flex flex-col rounded-b',
-                    dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
-                    dropdownHidden: 'hidden',
-                    option: 'first:text-green-600 first:bg-gray-50 first:py-3 first:hover:bg-gray-100 flex items-center justify-start box-border text-left cursor-pointer text-xs leading-snug py-2 px-3',
-                    optionPointed: 'text-gray-800 bg-gray-100',
-                    optionSelected: 'text-gray-700 bg-gray-200',
-                    optionSelectedPointed: 'text-gray-700 bg-gray-300',
-                    caret: 'bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none rtl:mr-0 rtl:ml-3.5',
-                    noOptions: 'py-2 px-3 text-red-500 bg-white text-left',
-                    noResults: 'py-2 px-3 text-red-500 bg-white text-left',
-                    search: 'rounded-lg w-full absolute inset-0 focus:ring-2 outline-none appearance-none box-border border-0 text-xs font-sans bg-white pl-3.5 rtl:pl-0 rtl:pr-3.5',
-                  }"
+                  @click="resourceFocused"
+
+                  :mode="resourceTagsMode ? 'tags' : 'multiple'"
+                  :multipleLabel="allResourceSelected"
+                  :classes="multiselectClasses(resourceFetched, resourceTagsMode)"
+                  @change="resourceTagCreated($event)"
+                  :create-option="false"
+                  :close-on-select="false"
+                  :groups="true"
                   :filter-results="true"
                   :searchable="true"
                   :resolve-on-load="false"
                   :clear-on-select="false"
                   :delay="resourceFetched ? -1 : (shouldResourceRetrieve ? 0 : -1)"
                   :options="getResources"
-              />
+              >
+
+                <template v-slot:tag="{ option, handleTagRemove }">
+                  <div v-tippy="$tagTooltip(option.label)" class="bg-sky-600 text-gray-100 text-xs font-medium py-1 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap">
+                    <span>{{ $normalizeTag(option.label) }}</span>
+                    <span class="multiselect-tag-remove" @mousedown.prevent="handleTagRemove(option, $event)">
+                      <span class="multiselect-tag-remove-icon"></span>
+                    </span>
+                  </div>
+                </template>
+
+                <!-- To show this slow, plase remove if parameter => "_ctx.hasSelected && !$props.disabled &&" on source code vue multiselect.js -->
+                <template v-if="!resourceTagsMode" v-slot:clear>
+                  <UilFileInfoAlt v-tippy="!resourceTagsMode ? tippyOnAllSelected(selectedResource) : ''" size="1.25rem" class="absolute right-3 text-gray-400 outline-none" />
+                </template>
+              </Multiselect>
             </div>
           </div>
 
           <div>
-            <label for="location" class="text-xs font-medium pl-1">Lokasi Pendaratan/Sampling</label>
+            <label for="location" class="text-xs font-medium pl-1 text-gray-600">Lokasi Pendaratan/Sampling</label>
 
             <div class="relative mt-1">
               <Multiselect
+                  placeholder="Pilih lokasi"
                   no-results-text="Tidak ditemukan"
                   no-options-text="Data kosong"
-                  placeholder="Pilih lokasi pendaratan/sampling"
                   v-model="selectedLocation"
                   ref="location"
-                  @click="locationFocused()"
-                  @change="onLocationChanged()"
-                  :classes="{
-                    clearIcon: '',
-                    container: 'border-gray-200 relative mx-auto w-full flex items-center justify-end box-border cursor-pointer  outline-none rounded-lg py-3 pl-2 pr-0 text-xs shadow-sm',
-                    dropdown: 'border-gray-300 shadow-lg max-h-60 min-h-60 z-40 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll bg-white flex flex-col rounded-b',
-                    dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
-                    dropdownHidden: 'hidden',
-                    caret: 'bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none rtl:mr-0 rtl:ml-3.5',
-                    noOptions: 'py-2 px-3 text-red-500 bg-white text-left',
-                    noResults: 'py-2 px-3 text-red-500 bg-white text-left',
-                    search: 'w-full absolute inset-0 focus:ring-2 outline-none appearance-none box-border border-0 text-xs font-sans bg-white rounded-lg pl-3.5 rtl:pl-0 rtl:pr-3.5',
-                  }"
+                  @click="locationFocused"
+
+                  :mode="locationTagsMode ? 'tags' : 'multiple'"
+                  :multipleLabel="allLocationSelected"
+                  :classes="multiselectClasses(locationFetched, locationTagsMode)"
+                  @change="locationTagCreated($event)"
+                  :create-option="false"
+                  :close-on-select="false"
+                  :groups="true"
                   :filter-results="true"
                   :searchable="true"
                   :resolve-on-load="false"
                   :clear-on-select="false"
                   :delay="locationFetched ? -1 : (shouldLocationRetrieve ? 0 : -1)"
                   :options="getLocations"
-              />
+              >
+                <template v-slot:tag="{ option, handleTagRemove }">
+                  <div v-tippy="$tagTooltip(option.label)" class="bg-sky-600 text-gray-100 text-xs font-medium py-1 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap">
+                    <span>{{ $normalizeTag(option.label) }}</span>
+                    <span class="multiselect-tag-remove" @mousedown.prevent="handleTagRemove(option, $event)">
+                      <span class="multiselect-tag-remove-icon"></span>
+                    </span>
+                  </div>
+                </template>
+
+                <!-- To show this slow, plase remove if parameter => "_ctx.hasSelected && !$props.disabled &&" on source code vue multiselect.js -->
+                <template v-if="!locationTagsMode" v-slot:clear>
+                  <UilFileInfoAlt v-tippy="!locationTagsMode ? tippyOnAllSelected(selectedLocation) : ''" size="1.25rem" class="absolute right-3 text-gray-400 outline-none" />
+                </template>
+              </Multiselect>
             </div>
           </div>
 
           <div>
-            <label for="spesies" class="text-xs font-medium pl-1">Spesies</label>
+            <label for="spesies" class="text-xs font-medium pl-1 text-gray-600">Spesies</label>
             <div class="relative mt-1">
               <Multiselect
-                  placeholder="Pilih nama spesies"
+
+                  placeholder="Pilih spesies"
                   no-results-text="Tidak ditemukan"
                   no-options-text="Data kosong"
                   v-model="selectedSpecies"
-                  mode="tags"
                   ref="species"
                   @click="speciesFocused"
-                  :classes="{
-                    clearIcon: '',
-                    container: 'border-1 hover:ring-2 relative mx-auto w-full flex items-center justify-end box-border cursor-pointer bg-white rounded-lg focus:outline-blue-400 py-2 pl-2 pr-0 text-xs shadow-sm',
-                    dropdown: 'max-h-60 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll z-40 bg-white flex flex-col rounded-b',
-                    dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
-                    dropdownHidden: 'hidden',
-                    caret: 'bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none rtl:mr-0 rtl:ml-3.5',
-                    tagsSearch: 'absolute outline-none inset-0 border-1 -ml-1.5 focus:ring-0 appearance-none  text-xs box-border w-full',
-                    noOptions: 'py-2 px-3 text-red-500 bg-white text-left',
-                    noResults: 'py-2 px-3 text-red-500 bg-white text-left',
-                    tagsSearchWrapper: 'inline-block relative mx-1 mb-1 flex-grow flex-shrink h-full outline-blue-400',
-                    tagSearch: 'w-full absolute inset-0 outline-blue-400 appearance-none box-border border-0 text-xs font-sans bg-white rounded pl-3.5 rtl:pl-0 rtl:pr-3.5',
-                  }"
+
+                  :mode="speciesTagsMode ? 'tags' : 'multiple'"
+                  :multipleLabel="allSpeciesSelected"
+                  :classes="multiselectClasses(speciesFetched, speciesTagsMode)"
+                  @change="speciesTagCreated($event)"
                   :create-option="false"
+                  :close-on-select="false"
+                  :groups="true"
                   :filter-results="true"
                   :searchable="true"
                   :resolve-on-load="false"
                   :clear-on-select="false"
-                  :close-on-select="false"
                   :delay="speciesFetched ? -1 : (shouldSpeciesRetrieve ? 0 : -1)"
                   :options="getSpecies"
-              />
+              >
+                <template v-slot:tag="{ option, handleTagRemove }">
+                  <div v-tippy="$tagTooltip(option.label)" class="bg-sky-600 text-gray-100 text-xs font-medium py-1 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap">
+                    <span>{{ $normalizeTag(option.label) }}</span>
+                    <span class="multiselect-tag-remove" @mousedown.prevent="handleTagRemove(option, $event)">
+                      <span class="multiselect-tag-remove-icon"></span>
+                    </span>
+                  </div>
+                </template>
+
+                <!-- To show this slow, plase remove if parameter => "_ctx.hasSelected && !$props.disabled &&" on source code vue multiselect.js -->
+                <template v-if="!speciesTagsMode" v-slot:clear>
+                  <UilFileInfoAlt v-tippy="!speciesTagsMode ? tippyOnAllSelected(selectedSpecies) : ''" size="1.25rem" class="absolute right-3 text-gray-400 outline-none" />
+                </template>
+              </Multiselect>
             </div>
           </div>
 
           <div class="flex space-x-3">
             <div>
-              <label for="min-length" class="text-xs font-medium">Panjang Minimal</label>
+              <label for="min-length" class="text-xs font-medium text-gray-600">Panjang Minimal</label>
               <div class="relative mt-1">
                 <input
                     v-model="selectedMinLength"
@@ -202,14 +232,14 @@
                     autocomplete="off"
                     id="min-length"
                     v-maska="lengthMask"
-                    class="w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm focus:ring-2 outline-none"
+                    class="w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm outline-sky-400"
                     placeholder="Minimal"
                 />
               </div>
             </div>
 
             <div>
-              <label for="max-length" class="text-xs font-medium">Panjang Maksimal</label>
+              <label for="max-length" class="text-xs font-medium text-gray-600">Panjang Maksimal</label>
               <div class="relative mt-1">
                 <input
                     v-model="selectedMaxLength"
@@ -217,7 +247,7 @@
                     autocomplete="off"
                     id="max-length"
                     v-maska="lengthMask"
-                    class="w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm focus:ring-2 outline-none"
+                    class="w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm outline-sky-400"
                     placeholder="Maksimal"
                 />
               </div>
@@ -227,7 +257,7 @@
 
           <div class="flex space-x-3">
             <div>
-              <label for="min-weight" class="text-xs font-medium">Berat Minimal</label>
+              <label for="min-weight" class="text-xs font-medium text-gray-600">Berat Minimal</label>
               <div class="relative mt-1">
                 <input
                     v-model="selectedMinWeight"
@@ -235,14 +265,14 @@
                     autocomplete="off"
                     id="min-weight"
                     v-maska="weightMask"
-                    class="w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm focus:ring-2 outline-none"
+                    class="w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm  outline-sky-400"
                     placeholder="Minimal"
                 />
               </div>
             </div>
 
             <div>
-              <label for="max-weight" class="text-xs font-medium">Berat Maksimal</label>
+              <label for="max-weight" class="text-xs font-medium text-gray-600">Berat Maksimal</label>
               <div class="relative mt-1">
                 <input
                     v-model="selectedMaxWeight"
@@ -250,7 +280,7 @@
                     autocomplete="off"
                     id="max-weight"
                     v-maska="weightMask"
-                    class="w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm focus:ring-2 outline-none"
+                    class="w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm outline-sky-400"
                     placeholder="Maksimal"
                 />
               </div>
@@ -258,20 +288,28 @@
           </div>
 
 
-          <div class="flex w-full pt-2.5 space-x-3">
-            <button @click="generate"
-                    class="w-full px-4 py-2.5 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring">
-              Generate Grafik
+          <div class="flex flex-col w-full pt-2 ">
+            <div :class="graphicImageName ? 'flex w-full pt-2.5 space-x-3' : 'flex w-full pt-2.5 space-x-3 mb-20'">
+              <button @click="generate"
+                      class="w-full px-4 py-2.5 text-left text-xs font-medium text-white bg-sky-600  rounded-lg hover:bg-sky-700 border-2 border-solid focus:border-sky-400">
+                <span class="text-gray-200">Generate Grafik</span>
+              </button>
+
+              <button @click="resetAll"
+                      v-tippy="{ content: 'Atur Ulang', placeholder: 'bottom'}"
+                      class="hover:text-gray-100 flex flex-col items-center w-12 py-2.5 py-3 text-xs font-medium text-white bg-gray-200 rounded-lg hover:bg-gray-300
+                      border-gray-300 border-2 border-solid focus:border-sky-400">
+                <UilFileRedoAlt size="1.25rem" class="text-gray-400 " />
+              </button>
+            </div>
+
+            <button @click="insertImage" v-if="graphicImageName"
+                    class="text-left mb-20 mt-3.5 w-full border-dashed border-2 border-gray-200 px-4 py-2.5 text-xs font-medium
+                    focus:border-solid focus:border-sky-500
+                    bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 ">
+              <span class="text-gray-500">Sisipkan Ulang Gambar</span>
             </button>
 
-            <button @click="resetAll"
-                    class="flex items-center w-12 py-2.5 py-3 text-xs font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd"
-                      d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
-                      clip-rule="evenodd"/>
-              </svg>
-            </button>
           </div>
         </div>
       </div>
@@ -285,19 +323,24 @@ import 'vue-loading-overlay/dist/vue-loading.css';
 import Multiselect from '@vueform/multiselect';
 import {toRaw, ref} from 'vue';
 import {DatePicker} from 'v-calendar';
-import { normalizeNumber, lengthMasker, weightMasker } from '@/utilities/utils';
+import {normalizeNumber, lengthMasker, weightMasker} from '@/utilities/utils';
+import { UilFileRedoAlt, UilFileInfoAlt } from '@iconscout/vue-unicons';
 
 export default {
   name: 'HubunganPanjangBerat',
-  // inject: ['insertGraphic'],
+  inject: ['insertGraphicImage'],
   components: {
     Loading,
     Multiselect,
-    DatePicker
+    DatePicker,
+    UilFileRedoAlt,
+    UilFileInfoAlt
   },
-  directives: {},
+  directives: {
+  },
   data() {
     return {
+      graphicImageName: '',
       tryingAt: 0,
       loading: false,
       canceled: false,
@@ -311,21 +354,30 @@ export default {
       dateRangeMasks: {title: 'MMMM YYYY', input: 'DD MMMM YYYY'},
       dateRangeConfig: {type: 'string', mask: 'YYYY-MM-DD',},
 
-      selectedWpp: '',
-      shouldWppRetrieve: false,
+      selectedWpp: [],
+      // shouldWppRetrieve: false,
+      shouldWppRetrieve: true,
       wppFetched: false,
+      wppTotal: 0,
+      wppTagsMode: true,
 
-      selectedResource: '',
+      selectedResource: [],
       shouldResourceRetrieve: false,
       resourceFetched: false,
+      resourceTotal: 0,
+      resourceTagsMode: true,
 
-      selectedLocation: '',
+      selectedLocation: [],
       shouldLocationRetrieve: false,
       locationFetched: false,
+      locationTotal: 0,
+      locationTagsMode: true,
 
       selectedSpecies: [],
       shouldSpeciesRetrieve: false,
       speciesFetched: false,
+      speciesTotal: 0,
+      speciesTagsMode: true,
 
       selectedMinLength: '',
       selectedMaxLength: '',
@@ -338,7 +390,8 @@ export default {
       return value.start && value.start ? `${value.start} - ${value.end}` : '';
     },
     resetRangeDate: function () {
-      return {start: null, end: null};
+      return {start: new Date('2019-01-01'), end: new Date('2019-12-31')};
+      // return {start: null, end: null};
     },
     onDateRangeOpened: function () {
       this.dateRangeOpened = true;
@@ -351,6 +404,7 @@ export default {
       }
     },
     resetAll: function () {
+      this.graphicImageName = '';
       this.selectedDateRange = ref(this.resetRangeDate());
       this.resetWpp();
       this.selectedMinLength = '';
@@ -359,10 +413,26 @@ export default {
       this.selectedMaxWeight = '';
     },
 
+    wppValue() {
+      const source = toRaw(this.selectedWpp);
+      return source.length > 0 && source.length === this.wppTotal ? [ this.$RED.API_FOR_ALL_SELECTED ] : source;
+    },
+    allWppSelected: function () {
+      return this.$RED.ALL_WPP;
+    },
+    wppTagCreated: function (list) {
+      this.wppTagsMode = !(this.wppTotal > 1 && list.length === this.wppTotal);
+      this.onWppChanged();
+    },
     resetWpp: function () {
       this.shouldWppRetrieve = true;
       this.wppFetched = false;
-      this.selectedWpp = '';
+      if (toRaw(this.selectedWpp).length > 0) {
+        this.$refs.wpp.clear();
+        this.$refs.wpp.clearSearch();
+      }
+
+      this.wppTotal = 0;
       this.resetResource();
     },
     wppFocused: function () {
@@ -371,7 +441,9 @@ export default {
       }
     },
     getWpp: async function () {
-      const {data} = await this.axios.post(`${this.$RED.HOST}/${this.$RED.HUBUNGAN_PANJANG_BERAT}/wpp`, toRaw(this.selectedDateRange));
+      const {data} = await this.axios.post(`${this.$RED.HOST}/${this.$RED.HUBUNGAN_PANJANG_BERAT}/wpp`, this.formForAsync());
+      console.log(data)
+      this.wppTotal = data && data.length > 0 ? data[0]['options'].length : 0;
       this.wppFetched = true;
       return data;
     },
@@ -379,10 +451,26 @@ export default {
       this.resetResource();
     },
 
+
+    resourceValue() {
+      const source = toRaw(this.selectedResource);
+      return source.length > 0 && source.length === this.resourceTotal ? [ this.$RED.API_FOR_ALL_SELECTED ] : source;
+    },
+    allResourceSelected: function () {
+      return this.$RED.ALL_RESOURCE;
+    },
+    resourceTagCreated: function (list) {
+      this.resourceTagsMode = !(this.resourceTotal > 1 && list.length === this.resourceTotal);
+      this.onResourceChanged();
+    },
     resetResource: function () {
       this.shouldResourceRetrieve = true;
       this.resourceFetched = false;
-      this.selectedResource = '';
+      if (toRaw(this.selectedResource).length > 0) {
+        this.$refs.resource.clear();
+      }
+
+      this.resourceTotal = 0;
       this.resetLocation();
     },
     resourceFocused: function () {
@@ -391,10 +479,8 @@ export default {
       }
     },
     getResources: async function () {
-      const {data} = await this.axios.post(`${this.$RED.HOST}/${this.$RED.HUBUNGAN_PANJANG_BERAT}/resources`, {
-        ...toRaw(this.selectedDateRange),
-        wpp: this.selectedWpp
-      });
+      const {data} = await this.axios.post(`${this.$RED.HOST}/${this.$RED.HUBUNGAN_PANJANG_BERAT}/resources`, this.formForAsync());
+      this.resourceTotal = data.length > 0 ? data[0]['options'].length : 0;
       this.resourceFetched = true;
       return data;
     },
@@ -402,10 +488,25 @@ export default {
       this.resetLocation();
     },
 
+    locationValue() {
+      const source = toRaw(this.selectedLocation);
+      return source.length > 0 && source.length === this.locationTotal ? [ this.$RED.API_FOR_ALL_SELECTED ] : source;
+    },
+    allLocationSelected: function () {
+      return this.$RED.ALL_LOCATION;
+    },
+    locationTagCreated: function (list) {
+      this.locationTagsMode = !(this.locationTotal > 1 && list.length === this.locationTotal);
+      this.onLocationChanged();
+    },
     resetLocation: function () {
       this.shouldLocationRetrieve = true;
       this.locationFetched = false;
-      this.selectedLocation = '';
+      if (toRaw(this.selectedLocation).length > 0) {
+        this.$refs.location.clear();
+      }
+
+      this.locationTotal = 0;
       this.resetSpecies();
     },
     locationFocused: function () {
@@ -414,11 +515,8 @@ export default {
       }
     },
     getLocations: async function () {
-      const {data} = await this.axios.post(`${this.$RED.HOST}/${this.$RED.HUBUNGAN_PANJANG_BERAT}/locations`, {
-        ...toRaw(this.selectedDateRange),
-        wpp: this.selectedWpp,
-        resource: this.selectedResource
-      });
+      const {data} = await this.axios.post(`${this.$RED.HOST}/${this.$RED.HUBUNGAN_PANJANG_BERAT}/locations`, this.formForAsync());
+      this.locationTotal = data.length > 0 ? data[0]['options'].length : 0;
       this.locationFetched = true;
       return data;
     },
@@ -427,12 +525,24 @@ export default {
     },
 
 
+    speciesValue() {
+      const source = toRaw(this.selectedSpecies);
+      return source.length > 0 && source.length === this.speciesTotal ? [ this.$RED.API_FOR_ALL_SELECTED ] : source;
+    },
+    allSpeciesSelected: function () {
+      return this.$RED.ALL_SPECIES;
+    },
+    speciesTagCreated: function (list) {
+      this.speciesTagsMode = !(this.speciesTotal > 1 && list.length === this.speciesTotal);
+    },
     resetSpecies: function () {
       this.shouldSpeciesRetrieve = true;
       this.speciesFetched = false;
-      this.$refs.species.clear();
-      this.$refs.species.clearSearch();
-      // this.selectedSpecies = [];
+      if (toRaw(this.selectedSpecies).length > 0) {
+        this.$refs.species.clear();
+      }
+
+      this.speciesTotal = 0;
     },
     speciesFocused: function () {
       if (!this.speciesFetched && this.shouldSpeciesRetrieve) {
@@ -440,25 +550,41 @@ export default {
       }
     },
     getSpecies: async function () {
-      const {data} = await this.axios.post(`${this.$RED.HOST}/${this.$RED.HUBUNGAN_PANJANG_BERAT}/species`, {
-        ...toRaw(this.selectedDateRange),
-        wpp: this.selectedWpp,
-        resource: this.selectedResource,
-        location: this.selectedLocation
-      });
+      const {data} = await this.axios.post(`${this.$RED.HOST}/${this.$RED.HUBUNGAN_PANJANG_BERAT}/species`, this.formForAsync());
+      this.speciesTotal = data.length > 0 ? data[0]['options'].length : 0;
       this.speciesFetched = true;
       return data;
     },
 
 
-    formToObject: function () {
+    tippyOnAllSelected: function (proxy) {
+      const list = toRaw(proxy);
+      const content =  list.reduce((acc, value, index) => {
+        return `${acc} ${value}${index < list.length - 1 ? ' <br>' : ''}`
+      }, '');
+      return {
+        content,
+        placement: 'left'
+      }
+    },
+    formForAsync: function () {
+      const {start, end, wpp, resource, location, species} = this.form();
+      return {
+        start, end,
+        wpp: wpp.length === 0 ? this.$RED.API_FOR_ZERO_SELECTED : wpp,
+        resource: resource.length === 0 ? this.$RED.API_FOR_ZERO_SELECTED : resource,
+        location: location.length === 0 ? this.$RED.API_FOR_ZERO_SELECTED : location,
+        species: resource.length === 0 ? this.$RED.API_FOR_ZERO_SELECTED : species,
+      };
+    },
+    form: function () {
       const {start, end} = this.selectedDateRange ? toRaw(this.selectedDateRange) : this.resetRangeDate();
       return {
         start, end,
-        wpp: this.selectedWpp,
-        resource: this.selectedResource,
-        location: this.selectedLocation,
-        species: toRaw(this.selectedSpecies),
+        wpp: this.wppValue(),
+        resource: this.resourceValue(),
+        location: this.locationValue(),
+        species: this.speciesValue(),
         minLength: normalizeNumber(this.selectedMinLength),
         maxLength: normalizeNumber(this.selectedMaxLength) || 1000000,
         minWeight: normalizeNumber(this.selectedMinWeight),
@@ -469,15 +595,15 @@ export default {
       const { start, end, wpp, resource, location, species } = body;
       if (start === null || end === null) {
         return 'Inputkan Rentang tanggal';
-      } else if (!wpp) {
+      } else if (!wpp || wpp.length <= 0) {
         this.wppFocused();
         this.$refs.wpp.$el.focus();
         return 'Inputkan WPP';
-      } else if (!resource) {
+      } else if (!resource || resource.length <= 0) {
         this.resourceFocused();
         this.$refs.resource.$el.focus();
-        return 'Inputkan WPP';
-      } else if (!location) {
+        return 'Inputkan Sumber Daya';
+      } else if (!location || location.length <= 0) {
         this.locationFocused();
         this.$refs.location.$el.focus();
         return 'Inputkan Lokasi';
@@ -490,13 +616,36 @@ export default {
       return undefined;
     },
 
+    insertImage: function (reinsert = false) {
+      if (reinsert) {
+        this.insertingImage = true;
+        this.loading = true;
+      }
+      // execute google script
+      this.insertGraphicImage(this.graphicImageName, () => {
+        this.successfullyInsertedImage();
+      }, () => {
+        this.failedToInsertImage();
+      });
+    },
+    successfullyGenerated({status, graphicImageName}, currentIteration) {
+      if (currentIteration === this.tryingAt && !this.canceled) {
+        if (status === 'SUCCESS') {
+          this.graphicImageName = graphicImageName || '';
+          this.insertingImage = true;
+          this.insertImage();
+        } else {
+          this.failedToGenerate();
+        }
+      }
+    },
     failedToGenerate: function () {
       this.graphicImageName = '';
       this.loading = false;
       this.$error('Grafik tidak berhasil digenerate.');
     },
     generate: async function () {
-      const body = this.formToObject();
+      const body = this.form();
       console.log(body);
       const notPass = this.pass(body);
       if (notPass) {
@@ -505,53 +654,33 @@ export default {
       }
 
       this.tryingAt++;
-      const iteration = this.tryingAt;
+      const currentIteration = this.tryingAt;
       this.graphicImageName = '';
       this.loading = true;
       this.canceled = false;
       this.insertingImage = false;
       this.$store.commit('setSearchText', '');
 
-      // setTimeout(() => {
-      //   if (iteration === this.tryingAt && !this.canceled) {
-      //     this.insertingImage = false;
-      //     this.loading = false;
-      //     this.$notify({
-      //       title: 'Grafik berhasil disisipkan!',
-      //       type: 'success'
-      //     });
-      //   }
-      // }, 2000);
-
-      this.axios.post(`${this.$RED.HOST}/${this.$RED.HUBUNGAN_PANJANG_BERAT}`, body)
-          .then(({data}) => {
-            const {status, graphicImageName} = data;
-            if (iteration === this.tryingAt && !this.canceled) {
-              if (status === 'SUCCESS') {
-                this.graphicImageName = graphicImageName || '';
-                this.insertingImage = true;
-
-                // execute google script
-                // this.insertGraphic(this.graphicImageName, () => {
-                //   this.onInsertImage(true);
-                // }, () => {
-                //   this.onInsertImage(false);
-                // });
-
-                setTimeout(() => {
-                  this.successfullyInsertedImage();
-                }, 3000);
-
-              } else {
-                this.failedToGenerate();
-              }
-            }
-          })
-          .catch(() => {
-            if (iteration === this.tryingAt) {
-              this.failedToGenerate();
-            }
+      setTimeout(() => {
+        if (currentIteration === this.tryingAt && !this.canceled) {
+          this.insertingImage = false;
+          this.loading = false;
+          this.$notify({
+            title: 'Grafik berhasil disisipkan!',
+            type: 'success'
           });
+        }
+      }, 2000);
+
+      // this.axios.post(`${this.$RED.HOST}/${this.$RED.HUBUNGAN_PANJANG_BERAT}`, body)
+      //     .then(({data}) => {
+      //       this.successfullyGenerated(data, currentIteration);
+      //     })
+      //     .catch(() => {
+      //       if (currentIteration === this.tryingAt) {
+      //         this.failedToGenerate();
+      //       }
+      //     });
     },
     cancel: function () {
       this.loading = false;
@@ -567,14 +696,37 @@ export default {
       this.insertingImage = false;
       this.loading = false;
       this.$error('Grafik gagal disisipkan');
+    },
+    multiselectClasses: function (fetched, tag) {
+      return {
+        clearIcon: '',
+        multipleLabel: 'py-1 relative z-1 flex text-start h-full  left-1 top-0 pointer-events-none bg-transparent',
+        container: 'border-2 border-solid border-gray-50  focus-within:border-sky-400 relative mx-auto w-full flex items-center justify-start box-border cursor-pointer bg-white rounded-lg py-2 pl-2 pr-0 text-xs shadow-sm ',
+        dropdown: !fetched ? 'hidden' : 'max-h-60 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll z-40 bg-white flex flex-col rounded-b',
+        dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
+        dropdownHidden: 'hidden',
+        caret: 'px-3 bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none rounded-lg ',
+        tagsSearch: tag ? 'absolute outline-none inset-0 border-1 appearance-none  text-xs box-border w-full -ml-1.5' : 'absolute outline-none inset-0 border-1 focus:ring-0 appearance-none text-xs box-border w-full rounded-lg ml-3',
+        noOptions: 'py-2 px-3 text-red-500 bg-white text-left',
+        noResults: 'py-2 px-3 text-red-500 bg-white text-left',
+        tagsSearchWrapper: 'inline-block relative mx-1 mb-1 flex-grow flex-shrink h-full outline-blue-400 rounded-lg',
+        tagSearch: 'w-full absolute inset-0 outline-blue-400 appearance-none box-border border-0 text-xs font-sans bg-white rounded-lg ',
+        groupLabel: 'flex text-xs box-border items-center justify-start text-left py-3 px-3 font-medium bg-green-50 text-green-700 leading-normal cursor-pointer',
+        groupLabelPointed: 'bg-green-100 text-green-700 ',
+        groupLabelSelected: 'bg-green-50 text-green-700 ',
+        groupLabelSelectedPointed: 'bg-green-100 hover:bg-green-50  text-green-700 ',
+        search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-xs bg-white rounded-lg  pl-3.5',
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-@import '@vueform/multiselect/themes/default.css';
-@import 'v-calendar/dist/style.css';
+* :deep(.tippy-box[data-theme~='red']) {
+  font-size: 0.7rem;
+  line-height: 1rem;
+}
 
 :deep(.vc-pane) {
   padding: 4px 8px 0px 8px;

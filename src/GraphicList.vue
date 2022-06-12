@@ -4,7 +4,7 @@
          class="relative block py-5 px-6 overflow-hidden border border-gray-100 rounded-lg bg-white"
          :class="index > 0 ? 'mt-5' : ''"
     >
-      <span class="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600"></span>
+      <span class="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-green-300 via-sky-500 to-purple-600"></span>
 
       <div class="justify-between sm:flex">
         <div>
@@ -22,7 +22,7 @@
 
       <dl class="flex flex-col mt-4 mb-1 items-end">
         <button @click="gotoGraphicPage(graphic)" :disabled="!graphic.createStatus"
-                :class="graphic.createStatus ? 'flex items-center justify-between px-3 py-2 text-blue-600 transition-colors border border-current rounded-lg hover:bg-blue-500 group active:bg-indigo-500 focus:outline-none focus:ring'
+                :class="graphic.createStatus ? 'flex items-center justify-between px-3 py-2 text-sky-600 transition-colors border border-current rounded-lg hover:bg-sky-500 group active:bg-sky-700 focus:outline-none focus:ring'
                 : 'flex items-center justify-between px-3 py-2 text-gray-600 transition-colors border border-current rounded-lg  group focus:outline-none '">
             <span :class="graphic.createStatus ? 'text-xs font-medium transition-colors group-hover:text-white'
                   : 'text-xs font-medium transition-colors'">
