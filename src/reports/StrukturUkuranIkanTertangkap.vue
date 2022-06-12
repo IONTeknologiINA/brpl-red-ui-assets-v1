@@ -384,7 +384,6 @@ export default {
       this.resetWpp();
       this.selectedMinLength = '';
       this.selectedMaxLength = '';
-      this.selectedMinWeight = '';
       this.scrollToTop();
     },
 
@@ -560,9 +559,7 @@ export default {
         location: this.locationValue(),
         species: this.speciesValue(),
         minLength: normalizeNumber(this.selectedMinLength),
-        maxLength: normalizeNumber(this.selectedMaxLength) || 1000000,
-        minWeight: normalizeNumber(this.selectedMinWeight),
-        maxWeight: normalizeNumber(this.selectedMaxWeight) || 1000000
+        maxLength: normalizeNumber(this.selectedMaxLength) || 1000000
       }
     },
     pass: function (body) {

@@ -89,7 +89,7 @@ export default {
           graphic: 'Produksi Ikan Per Sumber Daya',
           description: 'Grafik yang digunakan untuk menentukan hasil tangkapan per trip.',
           createText: 'Buat Grafik',
-          url: `/${translateToURL(this.$RED.HUBUNGAN_PANJANG_BERAT)}`,
+          url: `/${translateToURL(this.$RED.PRODUKSI_IKAN_PER_SUMBER_DAYA)}`,
           createStatus: true
         },
         {

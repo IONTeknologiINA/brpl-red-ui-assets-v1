@@ -49,7 +49,10 @@ const router = createRouter({
             path: `/${translateToURL(ResProps.STRUKTUR_UKURAN_IKAN_TERTANGKAP)}`,
             component: StrukturUkuranIkanTertangkap
         },
-    ]
+    ],
+    scrollBehavior() {
+        window.scrollTo(0,0);
+    }
 });
 
 export default router;

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full bg-gray-100">
+  <div  class="w-full h-full bg-gray-100">
     <notifications position="bottom right"/>
     <header class="fixed w-full top-0 z-50 py-5 bg-sky-600 text-white text-center h-20">
       <div class="flex items-center justify-between flex-1 gap-8 h-full sm:justify-end px-5">
@@ -53,8 +53,8 @@
 
       </div>
     </header>
-    <main class="relative w-full h-full bg-grey-100 z-30">
-      <div class="max-h-screen overflow-y-auto w-full h-full bg-gray-100">
+    <main  class="relative w-full h-full bg-grey-100 z-30">
+      <div  class="max-h-screen overflow-y-auto w-full h-full bg-gray-100">
         <router-view/>
       </div>
 
