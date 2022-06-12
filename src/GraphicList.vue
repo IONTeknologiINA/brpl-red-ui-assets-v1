@@ -21,28 +21,32 @@
       </div>
 
       <dl class="flex flex-col mt-4 mb-1 items-end">
-        <button @click="gotoGraphicPage(graphic)" :disabled="!graphic.createStatus"
-                :class="graphic.createStatus ? 'flex items-center justify-between px-3 py-2 text-sky-600 transition-colors border border-current rounded-lg hover:bg-sky-500 group active:bg-sky-700 focus:outline-none focus:ring'
-                : 'flex items-center justify-between px-3 py-2 text-gray-600 transition-colors border border-current rounded-lg  group focus:outline-none '">
-            <span :class="graphic.createStatus ? 'text-xs font-medium transition-colors group-hover:text-white'
-                  : 'text-xs font-medium transition-colors'">
+        <div @click="gotoGraphicPage(graphic, !graphic.createStatus)"
+             :class="createGraphicClasses(!graphic.createStatus)"
+        >
+            <span :class="createGraphicTextClasses(!graphic.createStatus)">
               {{ graphic.createText }}
             </span>
 
-          <svg v-if="graphic.createStatus" class="w-5 h-5 ml-3" xmlns="http://www.w3.org/2000/svg" fill="none"
-               viewBox="0 0 24 24"
-               stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-          </svg>
-        </button>
+          <UilAngleDoubleRight
+              size="2.4rem"
+              :class="createGraphicArrowClasses(!graphic.createStatus)"
+          />
+        </div>
       </dl>
     </div>
   </div>
 </template>
 
 <script>
+import {UilAngleDoubleRight} from '@iconscout/vue-unicons';
+import {translateToURL} from "@/utilities/utils";
+
 export default {
   name: 'GraphicList',
+  components: {
+    UilAngleDoubleRight
+  },
   data() {
     return {
       graphics: [
@@ -50,52 +54,79 @@ export default {
           graphic: 'Hubungan Panjang Berat',
           description: 'Grafik yang digunakan untuk mensimulasikan hasil perhitungan hubungan panjang dan berat.',
           createText: 'Buat Grafik',
-          url: '/hubungan-panjang-berat',
+          url: `/${translateToURL(this.$RED.HUBUNGAN_PANJANG_BERAT)}`,
           createStatus: true
         },
         {
           graphic: 'CPUE',
           description: 'Grafik yang digunakan untuk menentukan hasil tangkapan per upaya.',
-          createText: 'Segera ...',
-          createStatus: false
+          createText: 'Buat Grafik',
+          url: `/${translateToURL(this.$RED.CPUE)}`,
+          createStatus: true
         },
         {
           graphic: 'LPUE',
           description: 'Grafik yang digunakan untuk menentukan hasil tangkapan per trip.',
-          createText: 'Segera ...',
-          createStatus: false
+          createText: 'Buat Grafik',
+          url: `/${translateToURL(this.$RED.LPUE)}`,
+          createStatus: true
         },
         {
-          graphic: 'LPUE',
+          graphic: 'Hasil Tangkapan Per Trip',
           description: 'Grafik yang digunakan untuk menentukan hasil tangkapan per trip.',
-          createText: 'Segera ...',
-          createStatus: false
+          createText: 'Buat Grafik',
+          url: `/${translateToURL(this.$RED.HASIL_TANGKAPAN_PER_TRIP)}`,
+          createStatus: true
         },
         {
-          graphic: 'LPUE',
+          graphic: 'Produksi Ikan Per Alat Tangkap',
           description: 'Grafik yang digunakan untuk menentukan hasil tangkapan per trip.',
-          createText: 'Segera ...',
-          createStatus: false
+          createText: 'Buat Grafik',
+          url: `/${translateToURL(this.$RED.PRODUKSI_IKAN_PER_ALAT_TANGKAP)}`,
+          createStatus: true
         },
         {
-          graphic: 'LPUE',
+          graphic: 'Produksi Ikan Per Sumber Daya',
           description: 'Grafik yang digunakan untuk menentukan hasil tangkapan per trip.',
-          createText: 'Segera ...',
-          createStatus: false
+          createText: 'Buat Grafik',
+          url: `/${translateToURL(this.$RED.HUBUNGAN_PANJANG_BERAT)}`,
+          createStatus: true
+        },
+        {
+          graphic: 'Struktur Ukuran Ikan Tertangkap',
+          description: 'Grafik yang digunakan untuk menentukan hasil tangkapan per trip.',
+          createText: 'Buat Grafik',
+          url: `/${translateToURL(this.$RED.STRUKTUR_UKURAN_IKAN_TERTANGKAP)}`,
+          createStatus: true
         }
-
       ],
       // renderedGraphics: []
     }
   },
-  beforeMount() {
-    // this.restoreGraphics();
-  },
   methods: {
+    createGraphicClasses: function (disabled) {
+      return `group flex flex-row
+      items-center w-32
+      pl-3 pr-1 justify-between
+      border border-dashed border-gray-300 cursor-pointer rounded-lg
+      text-xs text-gray-500 hover:text-sky-500
+      hover:bg-sky-100 ${disabled ? 'cursor-not-allowed hover:bg-white w-28 border-0 items-end' : ''}
+      `;
+    },
+    createGraphicTextClasses: function (disabled) {
+      return `text-gray-400 z-10 group-hover:text-sky-500 ${disabled ? 'cursor-not-allowed group-hover:text-gray-400' : ''}`;
+    },
+    createGraphicArrowClasses: function (disabled) {
+      return `text-gray-300 ml-3 outline-none cursor-pointer -ml-1.5 group-hover:text-sky-300 ${disabled ? 'hidden cursor-not-allowed group-hover:text-gray-300' : ''}`;
+    },
     restoreGraphics: function () {
       // this.renderedGraphics = [...this.graphics];
     },
-    gotoGraphicPage: function (graphic) {
+    gotoGraphicPage: function (graphic, disabled) {
+      if (disabled) {
+        return;
+      }
+
       this.restoreGraphics();
       this.$store.commit('setHomepage', false);
       this.$store.commit('setSearch', false);
@@ -107,8 +138,8 @@ export default {
   computed: {
     renderedGraphics: function () {
       return this.graphics.filter(g => g.graphic.toLowerCase().includes(
-              this.$store.state.searchText.toLowerCase()
-          ))
+          this.$store.state.searchText.toLowerCase()
+      ))
     }
   }
 }

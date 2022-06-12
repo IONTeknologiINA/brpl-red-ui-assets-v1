@@ -21,13 +21,12 @@
 
         <div class="pl-6 pr-4 mt-6 mb-0 space-y-5 rounded-lg ">
           <div class="flex-col">
-            <div class="flex flex-row text-gray-700 item-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                   stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-              </svg>
-              <span class="text-base ml-2 font-medium pl-1 pb-4 ">Parameter Grafik</span>
+            <div class="flex flex-row text-gray-700 item-center justify-between">
+<!--              <span></span>-->
+              <div class="flex flex-row text-gray-700 item-center">
+                <span class="text-base font-medium pl-1 pb-4 font-semibold text-sky-700">Parameter Pembuatan Grafik</span>
+                <UilDocumentLayoutLeft size="1.25rem" class="text-sky-700 outline-none ml-3" />
+              </div>
             </div>
             <label for="date-range" class="text-xs font-medium pl-1 text-gray-600">Rentang Tanggal</label>
             <div class="relative mt-1">
@@ -291,8 +290,10 @@
           <div class="flex flex-col w-full pt-2 ">
             <div :class="graphicImageName ? 'flex w-full pt-2.5 space-x-3' : 'flex w-full pt-2.5 space-x-3 mb-20'">
               <button @click="generate"
-                      class="w-full px-4 py-2.5 text-left text-xs font-medium text-white bg-sky-600  rounded-lg hover:bg-sky-700 border-2 border-solid focus:border-sky-400">
-                <span class="text-gray-200">Generate Grafik</span>
+                      class="w-full flex flex-row px-4 py-2.5 text-left text-xs font-medium text-white
+                      items-center bg-sky-600  rounded-lg hover:bg-sky-700 border-2 border-solid focus:border-sky-400">
+                <UilChartLine size="1.25rem" class="text-gray-200 " />
+                <span class="text-gray-200 ml-2">Generate Grafik</span>
               </button>
 
               <button @click="resetAll"
@@ -305,9 +306,10 @@
 
             <button @click="insertImage" v-if="graphicImageName"
                     class="text-left mb-20 mt-3.5 w-full border-dashed border-2 border-gray-200 px-4 py-2.5 text-xs font-medium
-                    focus:border-solid focus:border-sky-500
+                    focus:border-solid focus:border-sky-500 flex flex-row items-center
                     bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 ">
-              <span class="text-gray-500">Sisipkan Ulang Gambar</span>
+              <UilPicture size="1.25rem" class="text-gray-400 " />
+              <span class="text-gray-500 ml-2">Sisipkan Ulang Gambar</span>
             </button>
 
           </div>
@@ -324,7 +326,7 @@ import Multiselect from '@vueform/multiselect';
 import {toRaw, ref} from 'vue';
 import {DatePicker} from 'v-calendar';
 import {normalizeNumber, lengthMasker, weightMasker} from '@/utilities/utils';
-import { UilFileRedoAlt, UilFileInfoAlt } from '@iconscout/vue-unicons';
+import { UilFileRedoAlt, UilFileInfoAlt, UilChartLine, UilDocumentLayoutLeft, UilPicture } from '@iconscout/vue-unicons';
 
 export default {
   name: 'HubunganPanjangBerat',
@@ -334,7 +336,10 @@ export default {
     Multiselect,
     DatePicker,
     UilFileRedoAlt,
-    UilFileInfoAlt
+    UilFileInfoAlt,
+    UilChartLine,
+    UilDocumentLayoutLeft,
+    UilPicture
   },
   directives: {
   },
@@ -418,7 +423,7 @@ export default {
       return source.length > 0 && source.length === this.wppTotal ? [ this.$RED.API_FOR_ALL_SELECTED ] : source;
     },
     allWppSelected: function () {
-      return this.$RED.ALL_WPP;
+      return `${this.$RED.ALL_WPP}&nbsp;&nbsp;(${this.wppTotal})`;
     },
     wppTagCreated: function (list) {
       this.wppTagsMode = !(this.wppTotal > 1 && list.length === this.wppTotal);
@@ -442,7 +447,6 @@ export default {
     },
     getWpp: async function () {
       const {data} = await this.axios.post(`${this.$RED.HOST}/${this.$RED.HUBUNGAN_PANJANG_BERAT}/wpp`, this.formForAsync());
-      console.log(data)
       this.wppTotal = data && data.length > 0 ? data[0]['options'].length : 0;
       this.wppFetched = true;
       return data;
@@ -457,7 +461,7 @@ export default {
       return source.length > 0 && source.length === this.resourceTotal ? [ this.$RED.API_FOR_ALL_SELECTED ] : source;
     },
     allResourceSelected: function () {
-      return this.$RED.ALL_RESOURCE;
+      return `${this.$RED.ALL_RESOURCE}&nbsp;&nbsp;(${this.resourceTotal})`;
     },
     resourceTagCreated: function (list) {
       this.resourceTagsMode = !(this.resourceTotal > 1 && list.length === this.resourceTotal);
@@ -493,7 +497,7 @@ export default {
       return source.length > 0 && source.length === this.locationTotal ? [ this.$RED.API_FOR_ALL_SELECTED ] : source;
     },
     allLocationSelected: function () {
-      return this.$RED.ALL_LOCATION;
+      return `${this.$RED.ALL_LOCATION}&nbsp;&nbsp;(${this.locationTotal})`;
     },
     locationTagCreated: function (list) {
       this.locationTagsMode = !(this.locationTotal > 1 && list.length === this.locationTotal);
@@ -530,7 +534,7 @@ export default {
       return source.length > 0 && source.length === this.speciesTotal ? [ this.$RED.API_FOR_ALL_SELECTED ] : source;
     },
     allSpeciesSelected: function () {
-      return this.$RED.ALL_SPECIES;
+      return `${this.$RED.ALL_SPECIES}&nbsp;&nbsp;(${this.speciesTotal})`;
     },
     speciesTagCreated: function (list) {
       this.speciesTagsMode = !(this.speciesTotal > 1 && list.length === this.speciesTotal);
@@ -646,7 +650,7 @@ export default {
     },
     generate: async function () {
       const body = this.form();
-      console.log(body);
+      // console.log(body);
       const notPass = this.pass(body);
       if (notPass) {
         this.$error(notPass);
@@ -661,26 +665,26 @@ export default {
       this.insertingImage = false;
       this.$store.commit('setSearchText', '');
 
-      setTimeout(() => {
-        if (currentIteration === this.tryingAt && !this.canceled) {
-          this.insertingImage = false;
-          this.loading = false;
-          this.$notify({
-            title: 'Grafik berhasil disisipkan!',
-            type: 'success'
-          });
-        }
-      }, 2000);
-
-      // this.axios.post(`${this.$RED.HOST}/${this.$RED.HUBUNGAN_PANJANG_BERAT}`, body)
-      //     .then(({data}) => {
-      //       this.successfullyGenerated(data, currentIteration);
-      //     })
-      //     .catch(() => {
-      //       if (currentIteration === this.tryingAt) {
-      //         this.failedToGenerate();
-      //       }
+      // setTimeout(() => {
+      //   if (currentIteration === this.tryingAt && !this.canceled) {
+      //     this.insertingImage = false;
+      //     this.loading = false;
+      //     this.$notify({
+      //       title: 'Grafik berhasil disisipkan!',
+      //       type: 'success'
       //     });
+      //   }
+      // }, 2000);
+
+      this.axios.post(`${this.$RED.HOST}/${this.$RED.HUBUNGAN_PANJANG_BERAT}`, body)
+          .then(({data}) => {
+            this.successfullyGenerated(data, currentIteration);
+          })
+          .catch(() => {
+            if (currentIteration === this.tryingAt) {
+              this.failedToGenerate();
+            }
+          });
     },
     cancel: function () {
       this.loading = false;

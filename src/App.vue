@@ -1,81 +1,45 @@
 <template>
   <div class="w-full h-full bg-gray-100">
     <notifications position="bottom right"/>
-    <header class="fixed w-full top-0 z-50 py-5 bg-sky-600 text-white text-center">
-      <div class="flex items-center justify-between flex-1 gap-8 sm:justify-end px-5">
+    <header class="fixed w-full top-0 z-50 py-5 bg-sky-600 text-white text-center h-20">
+      <div class="flex items-center justify-between flex-1 gap-8 h-full sm:justify-end px-5">
 
-        <div v-if="$store.state.search" class="relative mt-1 w-full">
+        <div v-if="$store.state.search" class="flex flex-row  w-full items-center">
           <input
               type="text"
               v-model="searchKey"
               v-focus
+              autocomplete="off"
               v-on:keyup="typingSearch"
               id="nama-grafik"
-              class="w-full py-3 px-4 text-xs text-gray-700 border-gray-200 rounded-lg shadow-sm focus:outline-blue-500"
+              class="w-full pt-2.5 pb-3 px-4 text-xs text-gray-700 border-gray-200 rounded-lg ring-1 ring-sky-700 outline-none"
               placeholder="Inputkan nama grafik"
           />
 
-          <button @click="cancelSearch" class="absolute inset-y-0 inline-flex items-center right-4">
-            <svg id="er5HkRPEcht1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                 viewBox="0 0 20 20" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" width="20"
-                 height="20">
-              <rect width="21.699571" height="2" rx="1" ry="1"
-                    transform="matrix(-.63323 0.63323-.707107-.707107 17.577513 3.750088)" fill="#909090"
-                    stroke-width="0"/>
-              <rect width="21.699571" height="2" rx="1" ry="1"
-                    transform="matrix(.63323 0.63323-.707107 0.707107 3.8367 2.335875)" fill="#909090"
-                    stroke-width="0"/>
-            </svg>
-          </button>
+          <UilMultiply  @click="cancelSearch"
+                        size="1.1rem"
+                        class="inset-y-0 inline-flex -ml-8 right-4 text-gray-400 outline-none cursor-pointer rounded-lg hover:text-red-400"
+          />
         </div>
 
-        <div v-if="!$store.state.search" class="flex flex-row items-center gap-6">
-          <button
-              v-if="!$store.state.homepage"
-              @click="backHomepage"
-              class="block sm:hidden p-2.5 text-gray-600 bg-white rounded-lg hover:bg-gray-200 shrink-0 shadow-sm">
-            <svg id="ejTlVZeJm9s1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                 viewBox="0 0 20 20" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" width="20"
-                 height="20">
-              <rect width="21.699571" height="2" rx="1" ry="1" transform="matrix(.895522 0 0 1 0.41202 9)" fill="#777"
-                    stroke-width="0"/>
-              <rect width="20.516043" height="2" rx="1" ry="1"
-                    transform="matrix(-.468049 0.468049-.707107-.707107 11.430134 1.414213)" fill="#777"
-                    stroke-width="0" stroke-linecap="round"/>
-              <rect width="21.699571" height="2" rx="1" ry="1"
-                    transform="matrix(.442649 0.442649-.707107 0.707107 1.827624 8.980497)" fill="#777"
-                    stroke-width="0"/>
-            </svg>
-          </button>
-
+        <div v-if="!$store.state.search" class="flex flex-row items-center gap-1">
+          <UilArrowLeft v-if="!$store.state.homepage"
+                        @click="backHomepage"
+                        size="2.4rem"
+                        class="text-gray-200 outline-none cursor-pointer -ml-1.5 hover:bg-sky-700 rounded-lg"
+          />
           <div v-if="!$store.state.search">
             <h4 v-if="$store.state.homepage" class="red-title text-lg font-medium">{{ $store.state.headerTitle }}</h4>
-            <h4 v-if="!$store.state.homepage" class="object-cover red-title text-base">{{ $store.state.headerTitle }}</h4>
+            <h4 v-if="!$store.state.homepage" class="ml-4 text-semibold object-cover red-title text-left text-base text-gray-200">{{ $store.state.headerTitle }}</h4>
           </div>
         </div>
 
         <div v-if="!$store.state.search" class="flex flex-row items-center gap-1">
-          <button
-              v-if="!$store.state.search && $store.state.homepage"
-              @click="searchGraphic"
-              class="block sm:hidden p-2.5 text-gray-600 bg-white rounded-lg hover:bg-gray-200 shrink-0 shadow-sm"
-          >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-            >
-              <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </button>
-
+          <UilFileSearchAlt v-if="!$store.state.search && $store.state.homepage"
+                            @click="searchGraphic"
+                        size="2.5rem"
+                        class="absolute right-4 p-2 text-gray-200 outline-none cursor-pointer  hover:bg-sky-700 rounded-lg"
+          />
 <!--          <button v-if="!$store.state.homepage" @click="myMenu">-->
 <!--            <svg id="eUKOTMbWute1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"-->
 <!--                 viewBox="0 0 24 29" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" width="24"-->
@@ -102,9 +66,15 @@
 </template>
 
 <script>
+import { UilArrowLeft, UilFileSearchAlt, UilMultiply } from '@iconscout/vue-unicons';
 
 export default {
   name: 'App',
+  components: {
+    UilArrowLeft,
+    UilFileSearchAlt,
+    UilMultiply
+  },
   data() {
     return {
       searchKey: ''
@@ -137,10 +107,4 @@ export default {
 <style>
 @import '@vueform/multiselect/themes/default.css';
 @import 'v-calendar/dist/style.css';
-
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
 </style>

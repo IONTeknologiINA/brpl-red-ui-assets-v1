@@ -13,27 +13,6 @@ import VueTippy from 'vue-tippy';
 import 'tippy.js/dist/tippy.css';
 
 const application = createApp(App);
-application.use(router);
-application.use(store);
-application.use(Notifications);
-application.use(VueAxios, axios);
-application.use(SetupCalendar, {});
-application.use(Maska);
-application.use(
-    VueTippy,
-    {
-        directive: 'tippy', // => v-tippy
-        defaultProps: {
-            placement: 'auto-end',
-            allowHTML: true,
-            delay: 100,
-            moveTransition: 'transform 0.2s ease-out',
-            appendTo: 'parent',
-            theme: 'red',
-            // arrow: false
-        }, // => Global default options * see all props
-    }
-);
 
 application.provide('insertGraphicImage', async (graphicImageName, onSuccess, onFailure) => {
     await delay(2000);
@@ -73,6 +52,27 @@ application.directive('focus', {
     mounted(el) {
         el.focus()
     }
-})
+});
 
+application.use(router);
+application.use(store);
+application.use(Notifications);
+application.use(VueAxios, axios);
+application.use(SetupCalendar, {});
+application.use(Maska);
+application.use(
+    VueTippy,
+    {
+        directive: 'tippy', // => v-tippy
+        defaultProps: {
+            placement: 'auto-end',
+            allowHTML: true,
+            delay: 100,
+            moveTransition: 'transform 0.2s ease-out',
+            appendTo: 'parent',
+            theme: 'red',
+            // arrow: false
+        }, // => Global default options * see all props
+    }
+);
 application.mount('#brpl-red');

@@ -35,9 +35,14 @@ function delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function translateToURL(str) {
+    return str.replace(/_/g, '-');
+}
+
 module.exports = {
     normalizeNumber,
     lengthMasker,
     weightMasker,
-    delay
+    delay,
+    translateToURL
 }
