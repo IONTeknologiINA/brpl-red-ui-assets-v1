@@ -1,14 +1,7 @@
 import {createRouter, createWebHistory} from "vue-router";
 import GraphicList from "@/GraphicList";
-import HubunganPanjangBerat from "@/reports/HubunganPanjangBerat";
-import Cpue from "@/reports/Cpue";
 import ResProps from './global-properties';
-import Lpue from "@/reports/Lpue";
-import HasilTangkapanPerTrip from "@/reports/HasilTangkapanPerTrip";
-import ProduksiIkanPerAlatTangkap from "@/reports/ProduksiIkanPerAlatTangkap";
 import {translateToURL} from "@/utilities/utils";
-import ProduksiIkanPerSumberDaya from "@/reports/ProduksiIkanPerSumberDaya";
-import StrukturUkuranIkanTertangkap from "@/reports/StrukturUkuranIkanTertangkap";
 
 const router = createRouter({
     history: createWebHistory('/'),
@@ -23,31 +16,35 @@ const router = createRouter({
         },
         {
             path: `/${translateToURL(ResProps.HUBUNGAN_PANJANG_BERAT)}`,
-            component: HubunganPanjangBerat
+            component: () => import ('../reports/HubunganPanjangBerat.vue')
         },
         {
             path: `/${translateToURL(ResProps.CPUE)}`,
-            component: Cpue
+            component: () => import ('../reports/Cpue.vue')
         },
         {
             path: `/${translateToURL(ResProps.LPUE)}`,
-            component: Lpue
+            component: () => import ('../reports/Lpue.vue')
         },
         {
             path: `/${translateToURL(ResProps.HASIL_TANGKAPAN_PER_TRIP)}`,
-            component: HasilTangkapanPerTrip
+            component: () => import ('../reports/HasilTangkapanPerTrip.vue')
+            // component: HasilTangkapanPerTrip
         },
         {
             path: `/${translateToURL(ResProps.PRODUKSI_IKAN_PER_ALAT_TANGKAP)}`,
-            component: ProduksiIkanPerAlatTangkap
+            component: () => import ('../reports/ProduksiIkanPerAlatTangkap.vue')
+            // component: ProduksiIkanPerAlatTangkap
         },
         {
             path: `/${translateToURL(ResProps.PRODUKSI_IKAN_PER_SUMBER_DAYA)}`,
-            component: ProduksiIkanPerSumberDaya
+            component: () => import ('../reports/ProduksiIkanPerSumberDaya.vue')
+            // component: ProduksiIkanPerSumberDaya
         },
         {
             path: `/${translateToURL(ResProps.STRUKTUR_UKURAN_IKAN_TERTANGKAP)}`,
-            component: StrukturUkuranIkanTertangkap
+            component: () => import ('../reports/StrukturUkuranIkanTertangkap.vue')
+            // component: StrukturUkuranIkanTertangkap
         },
     ],
     scrollBehavior() {
