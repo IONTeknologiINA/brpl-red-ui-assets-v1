@@ -2,6 +2,13 @@ import {createRouter, createWebHistory} from "vue-router";
 import GraphicList from "@/GraphicList";
 import ResProps from './global-properties';
 import {translateToURL} from "@/utilities/utils";
+// import HubunganPanjangBerat from "@/reports/HubunganPanjangBerat";
+// import Cpue from "@/reports/Cpue";
+// import Lpue from "@/reports/Lpue";
+// import HasilTangkapanPerTrip from "@/reports/HasilTangkapanPerTrip";
+// import ProduksiIkanPerAlatTangkap from "@/reports/ProduksiIkanPerAlatTangkap";
+// import ProduksiIkanPerSumberDaya from "@/reports/ProduksiIkanPerSumberDaya";
+// import StrukturUkuranIkanTertangkap from "@/reports/StrukturUkuranIkanTertangkap";
 
 const router = createRouter({
     history: createWebHistory('/'),
@@ -17,14 +24,17 @@ const router = createRouter({
         {
             path: `/${translateToURL(ResProps.HUBUNGAN_PANJANG_BERAT)}`,
             component: () => import ('../reports/HubunganPanjangBerat.vue')
+            // component: HubunganPanjangBerat
         },
         {
             path: `/${translateToURL(ResProps.CPUE)}`,
             component: () => import ('../reports/Cpue.vue')
+            // component: Cpue
         },
         {
             path: `/${translateToURL(ResProps.LPUE)}`,
             component: () => import ('../reports/Lpue.vue')
+            // component: Lpue
         },
         {
             path: `/${translateToURL(ResProps.HASIL_TANGKAPAN_PER_TRIP)}`,

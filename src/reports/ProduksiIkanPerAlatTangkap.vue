@@ -85,8 +85,12 @@
                 </template>
 
                 <!-- To show this slow, plase remove if parameter => "_ctx.hasSelected && !$props.disabled &&" on source code vue multiselect.js -->
-                <template v-if="!wppTagsMode" v-slot:clear>
-                  <UilFileInfoAlt v-tippy="!wppTagsMode ? tippyOnAllSelected(selectedWpp) : ''" size="1.25rem" class="absolute right-3 text-gray-400 outline-none" />
+                <template v-slot:clear>
+                  <UilFileInfoAlt v-if="!wppTagsMode" v-tippy="tippyOnAllSelected(selectedWpp)" size="1.25rem" class="absolute right-3 text-gray-400 outline-none" />
+                  <UilTrashAlt v-if="wppTagsMode && selectedWpp.length > 0"
+                               @click="$refs.wpp.clear()"
+                               v-tippy="{content: 'Bersihkan', placement: 'bottom'}"
+                               size="1.1rem" class="absolute right-3.5 bottom-4 text-gray-400 outline-none" />
                 </template>
 
               </Multiselect>
@@ -129,8 +133,12 @@
                 </template>
 
                 <!-- To show this slow, plase remove if parameter => "_ctx.hasSelected && !$props.disabled &&" on source code vue multiselect.js -->
-                <template v-if="!resourceTagsMode" v-slot:clear>
-                  <UilFileInfoAlt v-tippy="!resourceTagsMode ? tippyOnAllSelected(selectedResource) : ''" size="1.25rem" class="absolute right-3 text-gray-400 outline-none" />
+                <template v-slot:clear>
+                  <UilFileInfoAlt v-if="!resourceTagsMode" v-tippy="tippyOnAllSelected(selectedResource)" size="1.25rem" class="absolute right-3 text-gray-400 outline-none" />
+                  <UilTrashAlt v-if="resourceTagsMode && selectedResource.length > 0"
+                               @click="$refs.resource.clear()"
+                               v-tippy="{content: 'Bersihkan', placement: 'bottom'}"
+                               size="1.1rem" class="absolute right-3.5 bottom-4 text-gray-400 outline-none" />
                 </template>
               </Multiselect>
             </div>
@@ -172,8 +180,12 @@
                 </template>
 
                 <!-- To show this slow, plase remove if parameter => "_ctx.hasSelected && !$props.disabled &&" on source code vue multiselect.js -->
-                <template v-if="!locationTagsMode" v-slot:clear>
-                  <UilFileInfoAlt v-tippy="!locationTagsMode ? tippyOnAllSelected(selectedLocation) : ''" size="1.25rem" class="absolute right-3 text-gray-400 outline-none" />
+                <template v-slot:clear>
+                  <UilFileInfoAlt v-if="!locationTagsMode" v-tippy="tippyOnAllSelected(selectedLocation)" size="1.25rem" class="absolute right-3 text-gray-400 outline-none" />
+                  <UilTrashAlt v-if="locationTagsMode && selectedLocation.length > 0"
+                               @click="$refs.location.clear()"
+                               v-tippy="{content: 'Bersihkan', placement: 'bottom'}"
+                               size="1.1rem" class="absolute right-3.5 bottom-4 text-gray-400 outline-none" />
                 </template>
               </Multiselect>
             </div>
@@ -218,7 +230,7 @@ import Multiselect from '@vueform/multiselect';
 import {toRaw, ref} from 'vue';
 import {DatePicker} from 'v-calendar';
 import { lengthMasker, weightMasker} from '@/utilities/utils';
-import { UilFileRedoAlt, UilFileInfoAlt, UilChartLine, UilDocumentLayoutLeft, UilPicture } from '@iconscout/vue-unicons';
+import { UilFileRedoAlt, UilFileInfoAlt, UilChartLine, UilDocumentLayoutLeft, UilPicture, UilTrashAlt } from '@iconscout/vue-unicons';
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -232,7 +244,8 @@ export default {
     UilFileInfoAlt,
     UilChartLine,
     UilDocumentLayoutLeft,
-    UilPicture
+    UilPicture,
+    UilTrashAlt
   },
   directives: {
   },
@@ -396,7 +409,6 @@ export default {
       }
 
       this.locationTotal = 0;
-      this.resetSpecies();
     },
     locationFocused: function () {
       if (!this.locationFetched && this.shouldLocationRetrieve) {
@@ -517,7 +529,7 @@ export default {
       //   }
       // }, 2000);
 
-      this.axios.post(`${this.$RED.HOST}/${this.$RED.HUBUNGAN_PANJANG_BERAT}`, body)
+      this.axios.post(`${this.$RED.HOST}/${this.$RED.PRODUKSI_IKAN_PER_ALAT_TANGKAP}`, body)
           .then(({data}) => {
             this.successfullyGenerated(data, currentIteration);
           })
@@ -542,27 +554,6 @@ export default {
       this.loading = false;
       this.$error('Grafik gagal disisipkan');
     },
-    multiselectClasses: function (fetched, tag) {
-      return {
-        clearIcon: '',
-        multipleLabel: 'py-1 relative z-1 flex text-start h-full  left-1 top-0 pointer-events-none bg-transparent',
-        container: 'border-2 border-solid border-gray-50  focus-within:border-sky-400 relative mx-auto w-full flex items-center justify-start box-border cursor-pointer bg-white rounded-lg py-2 pl-2 pr-0 text-xs shadow-sm ',
-        dropdown: !fetched ? 'hidden' : 'max-h-60 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll z-40 bg-white flex flex-col rounded-b',
-        dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
-        dropdownHidden: 'hidden',
-        caret: 'px-3 bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none rounded-lg ',
-        tagsSearch: tag ? 'absolute outline-none inset-0 border-1 appearance-none  text-xs box-border w-full -ml-1.5' : 'absolute outline-none inset-0 border-1 focus:ring-0 appearance-none text-xs box-border w-full rounded-lg ml-3',
-        noOptions: 'py-2 px-3 text-red-500 bg-white text-left',
-        noResults: 'py-2 px-3 text-red-500 bg-white text-left',
-        tagsSearchWrapper: 'inline-block relative mx-1 mb-1 flex-grow flex-shrink h-full outline-blue-400 rounded-lg',
-        tagSearch: 'w-full absolute inset-0 outline-blue-400 appearance-none box-border border-0 text-xs font-sans bg-white rounded-lg ',
-        groupLabel: 'flex text-xs box-border items-center justify-start text-left py-3 px-3 font-medium bg-green-50 text-green-700 leading-normal cursor-pointer',
-        groupLabelPointed: 'bg-green-100 text-green-700 ',
-        groupLabelSelected: 'bg-green-50 text-green-700 ',
-        groupLabelSelectedPointed: 'bg-green-100 hover:bg-green-50  text-green-700 ',
-        search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-xs bg-white rounded-lg  pl-3.5',
-      }
-    }
   }
 }
 </script>

@@ -42,11 +42,11 @@ application.config.globalProperties.$success = function (msg) {
 };
 
 application.config.globalProperties.$tagTooltip = function (msg) {
-    return String(msg).length > 21 ? String(msg) : '';
+    return String(msg).length > 24 ? String(msg) : '';
 };
 
 application.config.globalProperties.$normalizeTag = function (msg) {
-    return String(msg).length > 21 ? `${String(msg).substring(0, 20)}...` : msg;
+    return String(msg).length > 24 ? `${String(msg).substring(0, 23)}...` : msg;
 };
 
 // Register a global custom directive called `v-focus`
