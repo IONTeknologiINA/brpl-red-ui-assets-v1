@@ -86,8 +86,12 @@
                 </template>
 
                 <!-- To show this slow, plase remove if parameter => "_ctx.hasSelected && !$props.disabled &&" on source code vue multiselect.js -->
-                <template v-if="!wppTagsMode" v-slot:clear>
-                  <UilFileInfoAlt v-tippy="!wppTagsMode ? tippyOnAllSelected(selectedWpp) : ''" size="1.25rem" class="absolute right-3 text-gray-400 outline-none" />
+                <template v-slot:clear>
+                  <UilFileInfoAlt v-if="!wppTagsMode" v-tippy="tippyOnAllSelected(selectedWpp)" size="1.25rem" class="absolute right-3 text-gray-400 outline-none" />
+                  <UilTrashAlt v-if="wppTagsMode && selectedWpp.length > 0"
+                               @click="$refs.wpp.clear()"
+                               v-tippy="{content: 'Bersihkan', placement: 'bottom'}"
+                               size="1.1rem" class="absolute right-3.5 bottom-4 text-gray-400 outline-none" />
                 </template>
 
               </Multiselect>
@@ -130,8 +134,12 @@
                 </template>
 
                 <!-- To show this slow, plase remove if parameter => "_ctx.hasSelected && !$props.disabled &&" on source code vue multiselect.js -->
-                <template v-if="!resourceTagsMode" v-slot:clear>
-                  <UilFileInfoAlt v-tippy="!resourceTagsMode ? tippyOnAllSelected(selectedResource) : ''" size="1.25rem" class="absolute right-3 text-gray-400 outline-none" />
+                <template v-slot:clear>
+                  <UilFileInfoAlt v-if="!resourceTagsMode" v-tippy="tippyOnAllSelected(selectedResource)" size="1.25rem" class="absolute right-3 text-gray-400 outline-none" />
+                  <UilTrashAlt v-if="resourceTagsMode && selectedResource.length > 0"
+                               @click="$refs.resource.clear()"
+                               v-tippy="{content: 'Bersihkan', placement: 'bottom'}"
+                               size="1.1rem" class="absolute right-3.5 bottom-4 text-gray-400 outline-none" />
                 </template>
               </Multiselect>
             </div>
@@ -172,8 +180,12 @@
                 </template>
 
                 <!-- To show this slow, plase remove if parameter => "_ctx.hasSelected && !$props.disabled &&" on source code vue multiselect.js -->
-                <template v-if="!locationTagsMode" v-slot:clear>
-                  <UilFileInfoAlt v-tippy="!locationTagsMode ? tippyOnAllSelected(selectedLocation) : ''" size="1.25rem" class="absolute right-3 text-gray-400 outline-none" />
+                <template v-slot:clear>
+                  <UilFileInfoAlt v-if="!locationTagsMode" v-tippy="tippyOnAllSelected(selectedLocation)" size="1.25rem" class="absolute right-3 text-gray-400 outline-none" />
+                  <UilTrashAlt v-if="locationTagsMode && selectedLocation.length > 0"
+                               @click="$refs.location.clear()"
+                               v-tippy="{content: 'Bersihkan', placement: 'bottom'}"
+                               size="1.1rem" class="absolute right-3.5 bottom-4 text-gray-400 outline-none" />
                 </template>
               </Multiselect>
             </div>
@@ -215,8 +227,12 @@
                 </template>
 
                 <!-- To show this slow, plase remove if parameter => "_ctx.hasSelected && !$props.disabled &&" on source code vue multiselect.js -->
-                <template v-if="!speciesTagsMode" v-slot:clear>
-                  <UilFileInfoAlt v-tippy="!speciesTagsMode ? tippyOnAllSelected(selectedSpecies) : ''" size="1.25rem" class="absolute right-3 text-gray-400 outline-none" />
+                <template v-slot:clear>
+                  <UilFileInfoAlt v-if="!speciesTagsMode" v-tippy="tippyOnAllSelected(selectedSpecies)" size="1.25rem" class="absolute right-3 text-gray-400 outline-none" />
+                  <UilTrashAlt v-if="speciesTagsMode && selectedSpecies.length > 0"
+                               @click="$refs.species.clear()"
+                               v-tippy="{content: 'Bersihkan', placement: 'bottom'}"
+                               size="1.1rem" class="absolute right-3.5 bottom-4 text-gray-400 outline-none" />
                 </template>
               </Multiselect>
             </div>
@@ -331,7 +347,7 @@ import Multiselect from '@vueform/multiselect';
 import {toRaw, ref} from 'vue';
 import {DatePicker} from 'v-calendar';
 import {normalizeNumber, lengthMasker, weightMasker} from '@/utilities/utils';
-import { UilFileRedoAlt, UilFileInfoAlt, UilChartLine, UilDocumentLayoutLeft, UilPicture } from '@iconscout/vue-unicons';
+import { UilFileRedoAlt, UilFileInfoAlt, UilChartLine, UilDocumentLayoutLeft, UilPicture, UilTrashAlt } from '@iconscout/vue-unicons';
 
 export default {
   name: 'HubunganPanjangBerat',
@@ -344,7 +360,8 @@ export default {
     UilFileInfoAlt,
     UilChartLine,
     UilDocumentLayoutLeft,
-    UilPicture
+    UilPicture,
+    UilTrashAlt
   },
   directives: {
   },
@@ -458,7 +475,6 @@ export default {
       }
     },
     getWpp: async function () {
-      console.log(`${this.$RED.HOST}/${this.$RED.HUBUNGAN_PANJANG_BERAT}/wpp`, this.formForAsync())
       const {data} = await this.axios.post(`${this.$RED.HOST}/${this.$RED.HUBUNGAN_PANJANG_BERAT}/wpp`, this.formForAsync());
       this.wppTotal = data && data.length > 0 ? data[0]['options'].length : 0;
       this.wppFetched = true;
