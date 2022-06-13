@@ -22,7 +22,7 @@
 
         <div class="pl-6 pr-4 mb-0 space-y-5 rounded-lg ">
           <div class="flex-col">
-            <div class="flex flex-row text-gray-700 item-center justify-between">
+            <div class="flex flex-row text-gray-700 item-center justify-between pb-2">
               <div class="flex flex-row text-gray-700 item-center">
                 <span class="text-base font-medium pl-1 pb-4 font-semibold text-sky-700">Parameter Pembuatan Grafik</span>
                 <UilDocumentLayoutLeft size="1.25rem" class="text-sky-700 outline-none ml-3" />
@@ -40,6 +40,7 @@
                 <template v-slot="{ inputValue, inputEvents }">
                   <input
                       placeholder="Masukan rentang tanggal"
+                      :class="$style.form.input"
                       class="bg-white w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm outline-sky-400 focus-within:outline-sky-400"
                       :value="formatDateRange(inputValue)"
                       v-on="inputEvents.end"
@@ -62,7 +63,7 @@
                   @click="wppFocused"
                   :mode="wppTagsMode ? 'tags' : 'multiple'"
                   :multipleLabel="allWppSelected"
-                  :classes="multiselectClasses(wppFetched, wppTagsMode)"
+                  :classes="$style.multiselect.component(wppFetched, wppTagsMode)"
                   @change="wppTagCreated($event)"
                   :create-option="false"
                   :close-on-select="false"
@@ -75,10 +76,10 @@
                   :options="getWpp"
               >
                 <template v-slot:tag="{ option, handleTagRemove }">
-                  <div v-tippy="$tagTooltip(option.label)" class="bg-sky-600 text-gray-100 text-xs font-medium py-1 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap">
-                    <span>{{ $normalizeTag(option.label) }}</span>
-                    <span class="multiselect-tag-remove" @mousedown.prevent="handleTagRemove(option, $event)">
-                      <span class="multiselect-tag-remove-icon"></span>
+                  <div v-tippy="$tagTooltip(option.label)" :class="$style.multiselect.tagWrapper">
+                    <span :class="$style.multiselect.tagLabel">{{ $normalizeTag(option.label) }}</span>
+                    <span :class="$style.multiselect.tagRemove" @mousedown.prevent="handleTagRemove(option, $event)">
+                      <span :class="$style.multiselect.tagRemoveIcon"></span>
                     </span>
                   </div>
                 </template>
@@ -105,7 +106,7 @@
 
                   :mode="resourceTagsMode ? 'tags' : 'multiple'"
                   :multipleLabel="allResourceSelected"
-                  :classes="multiselectClasses(resourceFetched, resourceTagsMode)"
+                  :classes="$style.multiselect.component(resourceFetched, resourceTagsMode)"
                   @change="resourceTagCreated($event)"
                   :create-option="false"
                   :close-on-select="false"
@@ -119,10 +120,10 @@
               >
 
                 <template v-slot:tag="{ option, handleTagRemove }">
-                  <div v-tippy="$tagTooltip(option.label)" class="bg-sky-600 text-gray-100 text-xs font-medium py-1 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap">
-                    <span>{{ $normalizeTag(option.label) }}</span>
-                    <span class="multiselect-tag-remove" @mousedown.prevent="handleTagRemove(option, $event)">
-                      <span class="multiselect-tag-remove-icon"></span>
+                  <div v-tippy="$tagTooltip(option.label)" :class="$style.multiselect.tagWrapper">
+                    <span :class="$style.multiselect.tagLabel">{{ $normalizeTag(option.label) }}</span>
+                    <span :class="$style.multiselect.tagRemove" @mousedown.prevent="handleTagRemove(option, $event)">
+                      <span :class="$style.multiselect.tagRemoveIcon"></span>
                     </span>
                   </div>
                 </template>
@@ -149,7 +150,7 @@
 
                   :mode="locationTagsMode ? 'tags' : 'multiple'"
                   :multipleLabel="allLocationSelected"
-                  :classes="multiselectClasses(locationFetched, locationTagsMode)"
+                  :classes="$style.multiselect.component(locationFetched, locationTagsMode)"
                   @change="locationTagCreated($event)"
                   :create-option="false"
                   :close-on-select="false"
@@ -162,10 +163,10 @@
                   :options="getLocations"
               >
                 <template v-slot:tag="{ option, handleTagRemove }">
-                  <div v-tippy="$tagTooltip(option.label)" class="bg-sky-600 text-gray-100 text-xs font-medium py-1 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap">
-                    <span>{{ $normalizeTag(option.label) }}</span>
-                    <span class="multiselect-tag-remove" @mousedown.prevent="handleTagRemove(option, $event)">
-                      <span class="multiselect-tag-remove-icon"></span>
+                  <div v-tippy="$tagTooltip(option.label)" :class="$style.multiselect.tagWrapper">
+                    <span :class="$style.multiselect.tagLabel">{{ $normalizeTag(option.label) }}</span>
+                    <span :class="$style.multiselect.tagRemove" @mousedown.prevent="handleTagRemove(option, $event)">
+                      <span :class="$style.multiselect.tagRemoveIcon"></span>
                     </span>
                   </div>
                 </template>

@@ -8,6 +8,7 @@ import VueAxios from 'vue-axios';
 import { SetupCalendar } from 'v-calendar';
 import Maska from 'maska';
 import properties from './utilities/global-properties';
+import style from './utilities/style';
 import {delay} from "@/utilities/utils";
 import VueTippy from 'vue-tippy';
 import 'tippy.js/dist/tippy.css';
@@ -24,6 +25,7 @@ application.provide('insertGraphicImage', async (graphicImageName, onSuccess, on
     //     .insertGraphic(graphicImageName);
 });
 
+application.config.globalProperties.$style = style;
 application.config.globalProperties.$RED = properties;
 
 application.config.globalProperties.$error = function (msg) {

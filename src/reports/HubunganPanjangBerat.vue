@@ -22,14 +22,14 @@
 
         <div class="pl-6 pr-4 mb-0 space-y-5 rounded-lg ">
           <div class="flex-col">
-            <div class="flex flex-row text-gray-700 item-center justify-between">
+            <div class="flex flex-row text-gray-700 item-center justify-between pb-2">
 <!--              <span></span>-->
               <div class="flex flex-row text-gray-700 item-center">
                 <span class="text-base font-medium pl-1 pb-4 font-semibold text-sky-700">Parameter Pembuatan Grafik</span>
                 <UilDocumentLayoutLeft size="1.25rem" class="text-sky-700 outline-none ml-3" />
               </div>
             </div>
-            <label for="date-range" class="text-xs font-medium pl-1 text-gray-600">Rentang Tanggal</label>
+            <label for="date-range" :class="$style.form.label">Rentang Tanggal</label>
             <div class="relative mt-1">
               <DatePicker v-model="selectedDateRange"
                           :popover="{ visibility: 'click' }"
@@ -41,6 +41,7 @@
                 <template v-slot="{ inputValue, inputEvents }">
                   <input
                       placeholder="Masukan rentang tanggal"
+                      :class="$style.form.input"
                       class="bg-white w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm outline-sky-400 focus-within:outline-sky-400"
                       :value="formatDateRange(inputValue)"
                       v-on="inputEvents.end"
@@ -52,7 +53,7 @@
           </div>
 
           <div>
-            <label for="wpp" class="text-xs font-medium pl-1 text-gray-600">WPP</label>
+            <label for="wpp" :class="$style.form.label">WPP</label>
             <div class="relative mt-1">
               <Multiselect
                   placeholder="Pilih wpp"
@@ -63,7 +64,7 @@
                   @click="wppFocused"
                   :mode="wppTagsMode ? 'tags' : 'multiple'"
                   :multipleLabel="allWppSelected"
-                  :classes="multiselectClasses(wppFetched, wppTagsMode)"
+                  :classes="$style.multiselect.component(wppFetched, wppTagsMode)"
                   @change="wppTagCreated($event)"
                   :create-option="false"
                   :close-on-select="false"
@@ -76,10 +77,10 @@
                   :options="getWpp"
               >
                 <template v-slot:tag="{ option, handleTagRemove }">
-                  <div v-tippy="$tagTooltip(option.label)" class="bg-sky-600 text-gray-100 text-xs font-medium py-1 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap">
-                    <span>{{ $normalizeTag(option.label) }}</span>
-                    <span class="multiselect-tag-remove" @mousedown.prevent="handleTagRemove(option, $event)">
-                      <span class="multiselect-tag-remove-icon"></span>
+                  <div v-tippy="$tagTooltip(option.label)" :class="$style.multiselect.tagWrapper">
+                    <span :class="$style.multiselect.tagLabel">{{ $normalizeTag(option.label) }}</span>
+                    <span :class="$style.multiselect.tagRemove" @mousedown.prevent="handleTagRemove(option, $event)">
+                      <span :class="$style.multiselect.tagRemoveIcon"></span>
                     </span>
                   </div>
                 </template>
@@ -94,7 +95,7 @@
           </div>
 
           <div>
-            <label for="resource" class="text-xs font-medium pl-1 text-gray-600">Sumber Daya</label>
+            <label for="resource" :class="$style.form.label">Sumber Daya</label>
             <div class="relative mt-1">
               <Multiselect
                   placeholder="Pilih sumber daya"
@@ -106,7 +107,7 @@
 
                   :mode="resourceTagsMode ? 'tags' : 'multiple'"
                   :multipleLabel="allResourceSelected"
-                  :classes="multiselectClasses(resourceFetched, resourceTagsMode)"
+                  :classes="$style.multiselect.component(resourceFetched, resourceTagsMode)"
                   @change="resourceTagCreated($event)"
                   :create-option="false"
                   :close-on-select="false"
@@ -120,10 +121,10 @@
               >
 
                 <template v-slot:tag="{ option, handleTagRemove }">
-                  <div v-tippy="$tagTooltip(option.label)" class="bg-sky-600 text-gray-100 text-xs font-medium py-1 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap">
-                    <span>{{ $normalizeTag(option.label) }}</span>
-                    <span class="multiselect-tag-remove" @mousedown.prevent="handleTagRemove(option, $event)">
-                      <span class="multiselect-tag-remove-icon"></span>
+                  <div v-tippy="$tagTooltip(option.label)" :class="$style.multiselect.tagWrapper">
+                    <span :class="$style.multiselect.tagLabel">{{ $normalizeTag(option.label) }}</span>
+                    <span :class="$style.multiselect.tagRemove" @mousedown.prevent="handleTagRemove(option, $event)">
+                      <span :class="$style.multiselect.tagRemoveIcon"></span>
                     </span>
                   </div>
                 </template>
@@ -137,7 +138,7 @@
           </div>
 
           <div>
-            <label for="location" class="text-xs font-medium pl-1 text-gray-600">Lokasi Pendaratan/Sampling</label>
+            <label for="location" :class="$style.form.label">Lokasi Pendaratan/Sampling</label>
 
             <div class="relative mt-1">
               <Multiselect
@@ -147,10 +148,9 @@
                   v-model="selectedLocation"
                   ref="location"
                   @click="locationFocused"
-
                   :mode="locationTagsMode ? 'tags' : 'multiple'"
                   :multipleLabel="allLocationSelected"
-                  :classes="multiselectClasses(locationFetched, locationTagsMode)"
+                  :classes="$style.multiselect.component(resourceFetched, resourceTagsMode)"
                   @change="locationTagCreated($event)"
                   :create-option="false"
                   :close-on-select="false"
@@ -163,10 +163,10 @@
                   :options="getLocations"
               >
                 <template v-slot:tag="{ option, handleTagRemove }">
-                  <div v-tippy="$tagTooltip(option.label)" class="bg-sky-600 text-gray-100 text-xs font-medium py-1 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap">
-                    <span>{{ $normalizeTag(option.label) }}</span>
-                    <span class="multiselect-tag-remove" @mousedown.prevent="handleTagRemove(option, $event)">
-                      <span class="multiselect-tag-remove-icon"></span>
+                  <div v-tippy="$tagTooltip(option.label)" :class="$style.multiselect.tagWrapper">
+                    <span :class="$style.multiselect.tagLabel">{{ $normalizeTag(option.label) }}</span>
+                    <span :class="$style.multiselect.tagRemove" @mousedown.prevent="handleTagRemove(option, $event)">
+                      <span :class="$style.multiselect.tagRemoveIcon"></span>
                     </span>
                   </div>
                 </template>
@@ -180,7 +180,7 @@
           </div>
 
           <div>
-            <label for="spesies" class="text-xs font-medium pl-1 text-gray-600">Spesies</label>
+            <label for="spesies" :class="$style.form.label">Spesies</label>
             <div class="relative mt-1">
               <Multiselect
 
@@ -193,7 +193,7 @@
 
                   :mode="speciesTagsMode ? 'tags' : 'multiple'"
                   :multipleLabel="allSpeciesSelected"
-                  :classes="multiselectClasses(speciesFetched, speciesTagsMode)"
+                  :classes="$style.multiselect.component(speciesFetched, speciesTagsMode)"
                   @change="speciesTagCreated($event)"
                   :create-option="false"
                   :close-on-select="false"
@@ -206,10 +206,10 @@
                   :options="getSpecies"
               >
                 <template v-slot:tag="{ option, handleTagRemove }">
-                  <div v-tippy="$tagTooltip(option.label)" class="bg-sky-600 text-gray-100 text-xs font-medium py-1 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap">
-                    <span>{{ $normalizeTag(option.label) }}</span>
-                    <span class="multiselect-tag-remove" @mousedown.prevent="handleTagRemove(option, $event)">
-                      <span class="multiselect-tag-remove-icon"></span>
+                  <div v-tippy="$tagTooltip(option.label)" :class="$style.multiselect.tagWrapper">
+                    <span :class="$style.multiselect.tagLabel">{{ $normalizeTag(option.label) }}</span>
+                    <span :class="$style.multiselect.tagRemove" @mousedown.prevent="handleTagRemove(option, $event)">
+                      <span :class="$style.multiselect.tagRemoveIcon"></span>
                     </span>
                   </div>
                 </template>
@@ -224,7 +224,7 @@
 
           <div class="flex space-x-3">
             <div>
-              <label for="min-length" class="text-xs font-medium text-gray-600">Panjang Minimal</label>
+              <label for="min-length" :class="$style.form.label">Panjang Minimal</label>
               <div class="relative mt-1">
                 <input
                     v-model="selectedMinLength"
@@ -232,6 +232,7 @@
                     autocomplete="off"
                     id="min-length"
                     v-maska="lengthMask"
+                    :class="$style.form.input"
                     class="w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm outline-sky-400"
                     placeholder="Minimal"
                 />
@@ -239,7 +240,7 @@
             </div>
 
             <div>
-              <label for="max-length" class="text-xs font-medium text-gray-600">Panjang Maksimal</label>
+              <label for="max-length" :class="$style.form.label">Panjang Maksimal</label>
               <div class="relative mt-1">
                 <input
                     v-model="selectedMaxLength"
@@ -247,6 +248,7 @@
                     autocomplete="off"
                     id="max-length"
                     v-maska="lengthMask"
+                    :class="$style.form.input"
                     class="w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm outline-sky-400"
                     placeholder="Maksimal"
                 />
@@ -257,7 +259,7 @@
 
           <div class="flex space-x-3">
             <div>
-              <label for="min-weight" class="text-xs font-medium text-gray-600">Berat Minimal</label>
+              <label for="min-weight" :class="$style.form.label">Berat Minimal</label>
               <div class="relative mt-1">
                 <input
                     v-model="selectedMinWeight"
@@ -265,6 +267,7 @@
                     autocomplete="off"
                     id="min-weight"
                     v-maska="weightMask"
+                    :class="$style.form.input"
                     class="w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm  outline-sky-400"
                     placeholder="Minimal"
                 />
@@ -272,7 +275,7 @@
             </div>
 
             <div>
-              <label for="max-weight" class="text-xs font-medium text-gray-600">Berat Maksimal</label>
+              <label for="max-weight" :class="$style.form.label">Berat Maksimal</label>
               <div class="relative mt-1">
                 <input
                     v-model="selectedMaxWeight"
@@ -280,6 +283,7 @@
                     autocomplete="off"
                     id="max-weight"
                     v-maska="weightMask"
+                    :class="$style.form.input"
                     class="w-full py-3 px-4 text-xs border-gray-200 rounded-lg shadow-sm outline-sky-400"
                     placeholder="Maksimal"
                 />
@@ -454,6 +458,7 @@ export default {
       }
     },
     getWpp: async function () {
+      console.log(`${this.$RED.HOST}/${this.$RED.HUBUNGAN_PANJANG_BERAT}/wpp`, this.formForAsync())
       const {data} = await this.axios.post(`${this.$RED.HOST}/${this.$RED.HUBUNGAN_PANJANG_BERAT}/wpp`, this.formForAsync());
       this.wppTotal = data && data.length > 0 ? data[0]['options'].length : 0;
       this.wppFetched = true;
@@ -713,9 +718,9 @@ export default {
       return {
         clearIcon: '',
         multipleLabel: 'py-1 relative z-1 flex text-start h-full  left-1 top-0 pointer-events-none bg-transparent',
-        container: 'border-2 border-solid border-gray-50  focus-within:border-sky-400 relative mx-auto w-full flex items-center justify-start box-border cursor-pointer bg-white rounded-lg py-2 pl-2 pr-0 text-xs shadow-sm ',
-        dropdown: !fetched ? 'hidden' : 'max-h-60 absolute -left-px -right-px -bottom-1 transform translate-y-full border rounded border-gray-200 -mt-px overflow-y-scroll z-40 bg-white flex flex-col rounded-b',
-        dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
+        container: 'border-2 border-solid border-gray-100  focus-within:border-sky-400 relative mx-auto w-full flex items-center justify-start box-border cursor-pointer bg-white rounded-lg py-2 pl-2 pr-0 text-xs shadow-sm ',
+        dropdown: !fetched ? 'hidden' : 'max-h-72 absolute -left-px -right-px -bottom-1 pb-1 transform translate-y-full border-2 rounded-lg border-gray-200 -mt-px overflow-y-auto z-40 bg-white flex flex-col rounded-lg',
+        dropdownTop: '-translate-y-full top-px bottom-auto rounded-lg',
         dropdownHidden: 'hidden',
         caret: 'px-3 bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none rounded-lg ',
         tagsSearch: tag ? 'absolute outline-none inset-0 border-1 appearance-none  text-xs box-border w-full -ml-1.5' : 'absolute outline-none inset-0 border-1 focus:ring-0 appearance-none text-xs box-border w-full rounded-lg ml-3',
