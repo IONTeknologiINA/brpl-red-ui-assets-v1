@@ -90,6 +90,10 @@ export default {
       this.$store.commit('setSearch', true);
     },
     backHomepage: function () {
+      if (this.$store.state.loading) {
+        return;
+      }
+
       this.$store.commit('setHomepage', true);
       this.$store.commit('setHeaderTitle', 'Graphics Engine');
       this.$router.push('/userCodeAppPanel');

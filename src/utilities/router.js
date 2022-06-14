@@ -10,6 +10,17 @@ import {translateToURL} from "@/utilities/utils";
 // import ProduksiIkanPerSumberDaya from "@/reports/ProduksiIkanPerSumberDaya";
 // import StrukturUkuranIkanTertangkap from "@/reports/StrukturUkuranIkanTertangkap";
 
+// const data = [];
+// const result = data.reduce((accumulator, currentValue) => {
+//     const {rate: {roomType: {name: currentRoomType}}} = currentValue;
+//     const exist = accumulator.find(({rate: {roomType: {name: roomType}}}) => roomType === currentRoomType);
+//     if (!exist)
+//         accumulator.push(currentValue);
+//
+//     return accumulator;
+// }, []);
+
+
 const router = createRouter({
     history: createWebHistory('/'),
     routes: [
@@ -58,7 +69,7 @@ const router = createRouter({
         },
     ],
     scrollBehavior() {
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
     }
 });
 

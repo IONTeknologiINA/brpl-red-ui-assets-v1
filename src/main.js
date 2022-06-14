@@ -16,13 +16,14 @@ import 'tippy.js/dist/tippy.css';
 const application = createApp(App);
 
 application.provide('insertGraphicImage', async (graphicImageName, onSuccess, onFailure) => {
-    await delay(2000);
-    onSuccess();
+    google.script.host.editor.focus();
+    // await delay(2000);
+    // onSuccess();
     // eslint-disable-next-line no-undef
-    // google.script.run
-    //     .withSuccessHandler(onSuccess)
-    //     .withFailureHandler(onFailure)
-    //     .insertGraphic(graphicImageName);
+    google.script.run
+        .withSuccessHandler(onSuccess)
+        .withFailureHandler(onFailure)
+        .insertGraphic(graphicImageName);
 });
 
 application.config.globalProperties.$style = style;

@@ -379,8 +379,8 @@ export default {
       return value.start && value.start ? `${value.start} - ${value.end}` : '';
     },
     resetRangeDate: function () {
-      return {start: new Date('2019-01-01'), end: new Date('2019-12-31')};
-      // return {start: null, end: null};
+      // return {start: new Date('2019-01-01'), end: new Date('2019-12-31')};
+      return {start: null, end: null};
     },
     onDateRangeOpened: function () {
       this.dateRangeOpened = true;
@@ -627,11 +627,6 @@ export default {
         }
       }
     },
-    failedToGenerate: function () {
-      this.graphicImageName = '';
-      this.loading = false;
-      this.$error('Grafik tidak berhasil digenerate.');
-    },
     generate: async function () {
       const body = this.form();
       // console.log(body);
@@ -648,6 +643,7 @@ export default {
       this.canceled = false;
       this.insertingImage = false;
       this.$store.commit('setSearchText', '');
+      this.$store.commit('setLoading', true);
 
       // setTimeout(() => {
       //   if (currentIteration === this.tryingAt && !this.canceled) {
@@ -673,17 +669,26 @@ export default {
     cancel: function () {
       this.loading = false;
       this.canceled = true;
+      this.$store.commit('setLoading', false);
       this.$error('Dibatalkan oleh pengguna');
     },
     successfullyInsertedImage: function () {
       this.insertingImage = false;
       this.loading = false;
+      this.$store.commit('setLoading', false);
       this.$success('Grafik berhasil disisipkan');
     },
     failedToInsertImage: function () {
       this.insertingImage = false;
       this.loading = false;
+      this.$store.commit('setLoading', false);
       this.$error('Grafik gagal disisipkan');
+    },
+    failedToGenerate: function () {
+      this.graphicImageName = '';
+      this.loading = false;
+      this.$store.commit('setLoading', false);
+      this.$error('Grafik tidak berhasil digenerate.');
     },
   }
 }

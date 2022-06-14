@@ -1,6 +1,6 @@
 export default {
-    // HOST: 'https://14ca-103-121-18-25.ap.ngrok.io',
-    HOST: 'http://localhost:4000',
+    HOST: 'https://staging-ebrpl-red.intelion.id',
+    // HOST: 'http://localhost:4000',
     CPUE: 'CPUE',
     HASIL_TANGKAPAN_PER_TRIP: 'hasil_tangkapan_per_trip',
     HUBUNGAN_PANJANG_BERAT: 'hubungan_panjang_berat',

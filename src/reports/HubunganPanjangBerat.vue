@@ -420,8 +420,8 @@ export default {
       return value.start && value.start ? `${value.start} - ${value.end}` : '';
     },
     resetRangeDate: function () {
-      return {start: new Date('2019-01-01'), end: new Date('2019-12-31')};
-      // return {start: null, end: null};
+      // return {start: new Date('2019-01-01'), end: new Date('2019-12-31')};
+      return {start: null, end: null};
     },
     onDateRangeOpened: function () {
       this.dateRangeOpened = true;
@@ -672,11 +672,6 @@ export default {
         }
       }
     },
-    failedToGenerate: function () {
-      this.graphicImageName = '';
-      this.loading = false;
-      this.$error('Grafik tidak berhasil digenerate.');
-    },
     generate: async function () {
       const body = this.form();
       // console.log(body);
@@ -693,6 +688,7 @@ export default {
       this.canceled = false;
       this.insertingImage = false;
       this.$store.commit('setSearchText', '');
+      this.$store.commit('setLoading', true);
 
       // setTimeout(() => {
       //   if (currentIteration === this.tryingAt && !this.canceled) {
@@ -718,39 +714,27 @@ export default {
     cancel: function () {
       this.loading = false;
       this.canceled = true;
+      this.$store.commit('setLoading', false);
       this.$error('Dibatalkan oleh pengguna');
     },
     successfullyInsertedImage: function () {
       this.insertingImage = false;
       this.loading = false;
+      this.$store.commit('setLoading', false);
       this.$success('Grafik berhasil disisipkan');
     },
     failedToInsertImage: function () {
       this.insertingImage = false;
       this.loading = false;
+      this.$store.commit('setLoading', false);
       this.$error('Grafik gagal disisipkan');
     },
-    multiselectClasses: function (fetched, tag) {
-      return {
-        clearIcon: '',
-        multipleLabel: 'py-1 relative z-1 flex text-start h-full  left-1 top-0 pointer-events-none bg-transparent',
-        container: 'border-2 border-solid border-gray-100  focus-within:border-sky-400 relative mx-auto w-full flex items-center justify-start box-border cursor-pointer bg-white rounded-lg py-2 pl-2 pr-0 text-xs shadow-sm ',
-        dropdown: !fetched ? 'hidden' : 'max-h-72 absolute -left-px -right-px -bottom-1 pb-1 transform translate-y-full border-2 rounded-lg border-gray-200 -mt-px overflow-y-auto z-40 bg-white flex flex-col rounded-lg',
-        dropdownTop: '-translate-y-full top-px bottom-auto rounded-lg',
-        dropdownHidden: 'hidden',
-        caret: 'px-3 bg-multiselect-caret bg-center bg-no-repeat w-2.5 h-4 py-px box-content mr-3.5 relative opacity-40 flex-shrink-0 flex-grow-0 transition-transform transform pointer-events-none rounded-lg ',
-        tagsSearch: tag ? 'absolute outline-none inset-0 border-1 appearance-none  text-xs box-border w-full -ml-1.5' : 'absolute outline-none inset-0 border-1 focus:ring-0 appearance-none text-xs box-border w-full rounded-lg ml-3',
-        noOptions: 'py-2 px-3 text-red-500 bg-white text-left',
-        noResults: 'py-2 px-3 text-red-500 bg-white text-left',
-        tagsSearchWrapper: 'inline-block relative mx-1 mb-1 flex-grow flex-shrink h-full outline-blue-400 rounded-lg',
-        tagSearch: 'w-full absolute inset-0 outline-blue-400 appearance-none box-border border-0 text-xs font-sans bg-white rounded-lg ',
-        groupLabel: 'flex text-xs box-border items-center justify-start text-left py-3 px-3 font-medium bg-green-50 text-green-700 leading-normal cursor-pointer',
-        groupLabelPointed: 'bg-green-100 text-green-700 ',
-        groupLabelSelected: 'bg-green-50 text-green-700 ',
-        groupLabelSelectedPointed: 'bg-green-100 hover:bg-green-50  text-green-700 ',
-        search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-xs bg-white rounded-lg  pl-3.5',
-      }
-    }
+    failedToGenerate: function () {
+      this.graphicImageName = '';
+      this.loading = false;
+      this.$store.commit('setLoading', false);
+      this.$error('Grafik tidak berhasil digenerate.');
+    },
   }
 }
 </script>

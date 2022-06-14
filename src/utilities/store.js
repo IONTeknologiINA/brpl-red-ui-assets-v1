@@ -4,6 +4,7 @@ const store = createStore({
     state() {
         return {
             homepage: true,
+            loading: false,
             search: false,
             headerTitle: 'Graphics Engine',
             searchText: ''
@@ -21,6 +22,9 @@ const store = createStore({
         },
         setHeaderTitle(state, props) {
             state.headerTitle = props;
+        },
+        setLoading(state, props) {
+            state.loading = props;
         },
     }
 });
