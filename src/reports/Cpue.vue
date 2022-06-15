@@ -252,6 +252,13 @@ export default {
   mounted() {
     this.scrollToTop();
   },
+  unmounted() {
+    if (this.graphicImageName) {
+      this.axios.delete(`${this.$RED.HOST}/helpers/remove/${this.graphicImageName}`)
+          .then(() => {})
+          .catch(() => {});
+    }
+  },
   data() {
     return {
       graphicImageName: '',
@@ -446,10 +453,11 @@ export default {
     form: function () {
       const {start, end} = this.selectedDateRange ? toRaw(this.selectedDateRange) : this.resetRangeDate();
       return {
+        ...this.$store.state.me,
         start, end,
         wpp: this.wppValue(),
         resource: this.resourceValue(),
-        location: this.locationValue(),
+        location: this.locationValue()
       }
     },
     pass: function (body) {
@@ -528,6 +536,7 @@ export default {
       this.axios.post(`${this.$RED.HOST}/${this.$RED.CPUE}`, body)
           .then(({data}) => {
             this.successfullyGenerated(data, currentIteration);
+            this.$me(data);
           })
           .catch(() => {
             if (currentIteration === this.tryingAt) {
@@ -536,6 +545,13 @@ export default {
           });
     },
     cancel: function () {
+      const {email} = this.$store.state.me;
+      if (email) {
+        this.axios.delete(`${this.$RED.HOST}/helpers/kill/${email}`)
+            .then(() => {})
+            .catch(() => {});
+      }
+
       this.loading = false;
       this.canceled = true;
       this.$store.commit('setLoading', false);

@@ -15,11 +15,36 @@ import 'tippy.js/dist/tippy.css';
 
 const application = createApp(App);
 
+application.provide('unknownError', async () => {
+    google.script.run
+        .withSuccessHandler(() => { google.script.host.close(); })
+        .unknownError();
+});
+
+application.provide('permissionDenied', async () => {
+    google.script.run
+        .withSuccessHandler(() => { google.script.host.close(); })
+        .permissionDenied();
+});
+
+application.provide('getSessionUserProperties', async (onSuccess, onFailure) => {
+    // setTimeout(() => {
+    //     onSuccess({
+    //         email: 'info@intelion.co.id',
+    //         tempKey: '123456'
+    //     })
+    // }, 2000)
+    google.script.run
+        .withSuccessHandler(onSuccess)
+        .withFailureHandler(onFailure)
+        .getSessionUserProperties();
+});
+
 application.provide('insertGraphicImage', async (graphicImageName, onSuccess, onFailure) => {
+    // setTimeout(() => {
+    //     onSuccess();
+    // }, 1000);
     google.script.host.editor.focus();
-    // await delay(2000);
-    // onSuccess();
-    // eslint-disable-next-line no-undef
     google.script.run
         .withSuccessHandler(onSuccess)
         .withFailureHandler(onFailure)
@@ -48,6 +73,12 @@ application.config.globalProperties.$tagTooltip = function (msg) {
 
 application.config.globalProperties.$normalizeTag = function (msg) {
     return String(msg).length > 24 ? `${String(msg).substring(0, 23)}...` : msg;
+};
+
+application.config.globalProperties.$me = function (data) {
+    if (data.requestKey) {
+        this.$store.commit('setMe', {...this.$store.state.me, requestKey: data.requestKey});
+    }
 };
 
 // Register a global custom directive called `v-focus`

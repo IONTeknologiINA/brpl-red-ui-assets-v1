@@ -3,14 +3,18 @@ import {createStore} from "vuex";
 const store = createStore({
     state() {
         return {
-            homepage: true,
+            homepage: false,
             loading: false,
             search: false,
             headerTitle: 'Graphics Engine',
-            searchText: ''
+            searchText: '',
+            me: {}
         }
     },
     mutations: {
+        setMe(state, props) {
+            state.me = {...props};
+        },
         setHomepage(state, props) {
             state.homepage = props;
         },

@@ -103,6 +103,9 @@ export default {
       // renderedGraphics: []
     }
   },
+  mounted() {
+    this.$store.commit('setHomepage', true);
+  },
   methods: {
     createGraphicClasses: function (disabled) {
       return `group flex flex-row

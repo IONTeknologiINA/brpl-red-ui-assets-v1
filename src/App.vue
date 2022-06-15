@@ -1,6 +1,17 @@
 <template>
-  <div  class="w-full h-full bg-gray-100">
+  <div class="w-full h-full bg-gray-100">
     <notifications position="bottom right"/>
+    <span v-if="auth()"
+          style="z-index: 10000"
+          class="text-xs text-sky-600 absolute bottom-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+      Memvalidasi pengguna ...
+    </span>
+    <loading v-if="auth()" v-model:active="$store.state.loading"
+             :color="'#0891b2'"
+             :width="30"
+             :height="30"
+             :opacity="0.9"
+             :is-full-page="true"/>
     <header class="fixed w-full top-0 z-50 py-5 bg-sky-600 text-white text-center h-20">
       <div class="flex items-center justify-between flex-1 gap-8 h-full sm:justify-end px-5">
 
@@ -16,9 +27,9 @@
               placeholder="Inputkan nama grafik"
           />
 
-          <UilMultiply  @click="cancelSearch"
-                        size="1.1rem"
-                        class="inset-y-0 inline-flex -ml-8 right-4 text-gray-400 outline-none cursor-pointer rounded-lg hover:text-red-400"
+          <UilMultiply @click="cancelSearch"
+                       size="1.1rem"
+                       class="inset-y-0 inline-flex -ml-8 right-4 text-gray-400 outline-none cursor-pointer rounded-lg hover:text-red-400"
           />
         </div>
 
@@ -30,31 +41,33 @@
           />
           <div v-if="!$store.state.search">
             <h4 v-if="$store.state.homepage" class="red-title text-lg font-medium">{{ $store.state.headerTitle }}</h4>
-            <h4 v-if="!$store.state.homepage" class="ml-4 text-semibold object-cover red-title text-left text-base text-gray-200">{{ $store.state.headerTitle }}</h4>
+            <h4 v-if="!$store.state.homepage"
+                class="ml-4 text-semibold object-cover red-title text-left text-base text-gray-200">
+              {{ $store.state.headerTitle }}</h4>
           </div>
         </div>
 
         <div v-if="!$store.state.search" class="flex flex-row items-center gap-1">
           <UilFileSearchAlt v-if="!$store.state.search && $store.state.homepage"
                             @click="searchGraphic"
-                        size="2.5rem"
-                        class="absolute right-4 p-2 text-gray-200 outline-none cursor-pointer  hover:bg-sky-700 rounded-lg"
+                            size="2.5rem"
+                            class="absolute right-4 p-2 text-gray-200 outline-none cursor-pointer  hover:bg-sky-700 rounded-lg"
           />
-<!--          <button v-if="!$store.state.homepage" @click="myMenu">-->
-<!--            <svg id="eUKOTMbWute1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"-->
-<!--                 viewBox="0 0 24 29" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" width="24"-->
-<!--                 height="29">-->
-<!--              <ellipse rx="2.901147" ry="2.9" transform="translate(17.165639 4.655885)" fill="#fff" stroke-width="0"/>-->
-<!--              <ellipse rx="2.901147" ry="2.9" transform="translate(17.165639 14.5)" fill="#fff" stroke-width="0"/>-->
-<!--              <ellipse rx="2.901147" ry="2.9" transform="translate(17.165639 24.34)" fill="#fff" stroke-width="0"/>-->
-<!--            </svg>-->
-<!--          </button>-->
+          <!--          <button v-if="!$store.state.homepage" @click="myMenu">-->
+          <!--            <svg id="eUKOTMbWute1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"-->
+          <!--                 viewBox="0 0 24 29" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" width="24"-->
+          <!--                 height="29">-->
+          <!--              <ellipse rx="2.901147" ry="2.9" transform="translate(17.165639 4.655885)" fill="#fff" stroke-width="0"/>-->
+          <!--              <ellipse rx="2.901147" ry="2.9" transform="translate(17.165639 14.5)" fill="#fff" stroke-width="0"/>-->
+          <!--              <ellipse rx="2.901147" ry="2.9" transform="translate(17.165639 24.34)" fill="#fff" stroke-width="0"/>-->
+          <!--            </svg>-->
+          <!--          </button>-->
         </div>
 
       </div>
     </header>
-    <main  class="relative w-full h-full bg-grey-100 z-30">
-      <div  class="max-h-screen overflow-y-auto w-full h-full bg-gray-100">
+    <main class="relative w-full h-full bg-grey-100 z-30">
+      <div class="max-h-screen overflow-y-auto w-full h-full bg-gray-100">
         <router-view/>
       </div>
 
@@ -66,11 +79,15 @@
 </template>
 
 <script>
-import { UilArrowLeft, UilFileSearchAlt, UilMultiply } from '@iconscout/vue-unicons';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
+import {UilArrowLeft, UilFileSearchAlt, UilMultiply} from '@iconscout/vue-unicons';
 
 export default {
   name: 'App',
+  inject: ['getSessionUserProperties', 'permissionDenied', 'unknownError'],
   components: {
+    Loading,
     UilArrowLeft,
     UilFileSearchAlt,
     UilMultiply
@@ -80,7 +97,31 @@ export default {
       searchKey: ''
     }
   },
+  mounted() {
+    this.$store.commit('setLoading', true);
+    console.log(this.$store.state.homepage, this.$store.state.loading);
+    this.getSessionUserProperties((info) => {
+      this.axios.post(`${this.$RED.HOST}${this.$RED.AUTHORIZATION_URL}`, info)
+      .then(({data}) => {
+        this.$store.commit('setLoading', false);
+        this.$store.commit('setMe', {...info, requestKey: data.requestKey});
+        console.log(this.$store.state.homepage && this.$store.state.loading);
+      }).catch((e) => {
+        console.log(e)
+        this.$store.commit('setLoading', false);
+        this.$store.commit('setMe', {});
+        this.permissionDenied();
+      });
+    }, (e) => {
+      this.$store.commit('setLoading', false);
+      this.unknownError();
+      console.log(e);
+    });
+  },
   methods: {
+    auth: function () {
+      return this.$store.state.homepage && this.$store.state.loading;
+    },
     cancelSearch: function () {
       this.$store.commit('setSearch', false);
       this.searchKey = '';
@@ -98,11 +139,17 @@ export default {
       this.$store.commit('setHeaderTitle', 'Graphics Engine');
       this.$router.push('/userCodeAppPanel');
     },
+
     typingSearch: function () {
       this.$store.commit('setSearchText', this.searchKey);
     },
     myMenu: function () {
       console.log(this.$store.state.homepage);
+      // this.getSessionUserProperties((success) => {
+      //   console.log(success);
+      // }, (e) => {
+      //   console.log(e);
+      // })
     }
   }
 }

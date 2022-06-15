@@ -365,6 +365,13 @@ export default {
   },
   directives: {
   },
+  unmounted() {
+    if (this.graphicImageName) {
+      this.axios.delete(`${this.$RED.HOST}/helpers/remove/${this.graphicImageName}`)
+          .then(() => {})
+          .catch(() => {});
+    }
+  },
   data() {
     return {
       graphicImageName: '',
@@ -613,6 +620,7 @@ export default {
     form: function () {
       const {start, end} = this.selectedDateRange ? toRaw(this.selectedDateRange) : this.resetRangeDate();
       return {
+        ...this.$store.state.me,
         start, end,
         wpp: this.wppValue(),
         resource: this.resourceValue(),
@@ -712,6 +720,13 @@ export default {
           });
     },
     cancel: function () {
+      const {email} = this.$store.state.me;
+      if (email) {
+        this.axios.delete(`${this.$RED.HOST}/helpers/kill/${email}`)
+            .then(() => {})
+            .catch(() => {});
+      }
+
       this.loading = false;
       this.canceled = true;
       this.$store.commit('setLoading', false);
