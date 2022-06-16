@@ -1,17 +1,8 @@
 <template>
   <div class="w-full h-full bg-gray-100">
     <notifications position="bottom right"/>
-    <span v-if="auth()"
-          style="z-index: 10000"
-          class="text-xs text-sky-600 absolute bottom-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-      Memvalidasi pengguna ...
-    </span>
-    <loading v-if="auth()" v-model:active="$store.state.loading"
-             :color="'#0891b2'"
-             :width="30"
-             :height="30"
-             :opacity="0.9"
-             :is-full-page="true"/>
+
+
     <header class="fixed w-full top-0 z-50 py-5 bg-sky-600 text-white text-center h-20">
       <div class="flex items-center justify-between flex-1 gap-8 h-full sm:justify-end px-5">
 
@@ -67,13 +58,25 @@
       </div>
     </header>
     <main class="relative w-full h-full bg-grey-100 z-30">
+      <loading v-model:active="$store.state.loading"
+               :color="'#dc2626'"
+               :width="38"
+               :height="38"
+               :opacity="1"
+               :blur="'2px'"
+               :is-full-page="true"/>
+      <span v-if="auth()"
+            style="z-index: 10000"
+            class="text-xs text-red-600 absolute  bottom-2/4 -mb-10 left-1/2 transform -translate-x-1/2 translate-y-1/2">
+      Memvalidasi pengguna ...
+      </span>
       <div class="max-h-screen overflow-y-auto w-full h-full bg-gray-100">
         <router-view/>
       </div>
 
     </main>
-    <footer class="fixed bottom-0 z-30 w-full py-3 px-6 bg-gray-400 text-xs text-start text-white">
-      <button @click="myMenu">Report Engine Developer ©2022</button>
+    <footer class="fixed bottom-0 z-30 w-full py-3 px-6 bg-sky-100 text-xs text-start text-white border-t border-solid border-gray-200">
+      <button @click="myMenu" class="text-gray-500">Report Engine Developer ©2022</button>
     </footer>
   </div>
 </template>
@@ -128,6 +131,10 @@ export default {
       this.$store.commit('setSearchText', '');
     },
     searchGraphic: function () {
+      if (this.$store.state.loading) {
+        return;
+      }
+
       this.$store.commit('setSearch', true);
     },
     backHomepage: function () {

@@ -22,7 +22,7 @@
 
       <dl class="flex flex-col mt-4 mb-1 items-end">
         <div @click="gotoGraphicPage(graphic, !graphic.createStatus)"
-             :class="createGraphicClasses(!graphic.createStatus)"
+             :class="createGraphicClasses()"
         >
             <span :class="createGraphicTextClasses(!graphic.createStatus)">
               {{ graphic.createText }}
@@ -107,20 +107,21 @@ export default {
     this.$store.commit('setHomepage', true);
   },
   methods: {
-    createGraphicClasses: function (disabled) {
+    createGraphicClasses: function () {
       return `group flex flex-row
       items-center w-32
       pl-3 pr-1 justify-between
-      border border-dashed border-gray-300 cursor-pointer rounded-lg
+      border border-dotted border-gray-300 cursor-pointer rounded-lg
       text-xs text-gray-500 hover:text-sky-500
-      hover:bg-sky-100 ${disabled ? 'cursor-not-allowed hover:bg-white w-28 border-0 items-end' : ''}
+      hover:bg-sky-100
       `;
+      // ${disabled ? 'cursor-not-allowed hover:bg-white w-28 border-0 items-end' : ''}
     },
     createGraphicTextClasses: function (disabled) {
-      return `text-gray-400 z-10 group-hover:text-sky-500 ${disabled ? 'cursor-not-allowed group-hover:text-gray-400' : ''}`;
+      return `text-gray-400 z-10 text-xs group-hover:text-sky-500 ${disabled ? 'cursor-not-allowed group-hover:text-gray-400' : ''}`;
     },
     createGraphicArrowClasses: function (disabled) {
-      return `text-gray-300 ml-3 outline-none cursor-pointer -ml-1.5 group-hover:text-sky-300 ${disabled ? 'hidden cursor-not-allowed group-hover:text-gray-300' : ''}`;
+      return `text-gray-300  outline-none cursor-pointer  group-hover:text-sky-300 ${disabled ? 'hidden cursor-not-allowed group-hover:text-gray-300' : ''}`;
     },
     restoreGraphics: function () {
       // this.renderedGraphics = [...this.graphics];
@@ -130,6 +131,7 @@ export default {
         return;
       }
 
+      this.$store.commit('setLoading', true);
       this.restoreGraphics();
       this.$store.commit('setHomepage', false);
       this.$store.commit('setSearch', false);

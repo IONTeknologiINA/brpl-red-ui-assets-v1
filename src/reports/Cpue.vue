@@ -2,19 +2,19 @@
   <div ref="sectioncontainer"  class="flex-1 mt-20 pt-1 pb-5 mb-10  bg-gray-100 h-full">
     <button v-if="loading && !insertingImage" style="z-index: 10000"
             @click="cancel"
-            class="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-3 py-2 text-xs mb-12 font-medium text-white bg-red-500 rounded-lg hover:bg-red-700 focus:ring">
+            class="absolute bottom-0 absolute  bottom-2/4 -mb-14 left-1/2 transform -translate-x-1/2 translate-y-1/2 px-3 py-2 text-xs  font-medium text-white bg-red-500 rounded-lg hover:bg-red-700 focus:ring">
       Batalkan
     </button>
     <span v-if="insertingImage"
           style="z-index: 10000"
-          class="text-xs text-red-500 absolute bottom-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          class="text-xs text-red-500 absolute  bottom-2/4 -mb-14 left-1/2 transform -translate-x-1/2 translate-y-1/2">
       Menyisipkan gambar ...
     </span>
     <loading v-model:active="loading"
              :color="'#ff2020'"
              :width="25"
              :height="25"
-             :opacity="0.9"
+             :opacity="1"
              :is-full-page="true"/>
     <div class="max-w-screen-xl mx-auto">
       <input ref="toTop" autocomplete="off" class="h-0 -mt-10"/>
@@ -22,9 +22,9 @@
 
         <div class="pl-6 pr-4 mb-0 space-y-5 rounded-lg ">
           <div class="flex-col">
-            <div class="flex flex-row text-gray-700 item-center justify-between pb-2">
-              <div class="flex flex-row text-gray-700 item-center">
-                <span class="text-base font-medium pl-1 pb-4 font-semibold text-sky-700">Parameter Pembuatan Grafik</span>
+            <div class="flex flex-row text-gray-700 item-center justify-between pb-6">
+              <div class="flex flex-row text-gray-700 h-full items-center justify-between w-full">
+                <span class="text-base  pl-1 font-semibold text-sky-700">Inputkan Parameter</span>
                 <UilDocumentLayoutLeft size="1.25rem" class="text-sky-700 outline-none ml-3" />
               </div>
             </div>
@@ -250,6 +250,7 @@ export default {
   directives: {
   },
   mounted() {
+    this.$store.commit('setLoading', false);
     this.scrollToTop();
   },
   unmounted() {
@@ -573,7 +574,9 @@ export default {
       this.graphicImageName = '';
       this.loading = false;
       this.$store.commit('setLoading', false);
-      this.$error('Grafik tidak berhasil digenerate.');
+      if (!this.canceled) {
+        this.$error('Grafik tidak berhasil digenerate.');
+      }
     },
   }
 }

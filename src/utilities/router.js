@@ -1,7 +1,7 @@
 import {createRouter, createWebHistory} from "vue-router";
 import GraphicList from "@/GraphicList";
 import ResProps from './global-properties';
-import {translateToURL} from "@/utilities/utils";
+import {delay, translateToURL} from "@/utilities/utils";
 // import HubunganPanjangBerat from "@/reports/HubunganPanjangBerat";
 // import Cpue from "@/reports/Cpue";
 // import Lpue from "@/reports/Lpue";
@@ -9,16 +9,7 @@ import {translateToURL} from "@/utilities/utils";
 // import ProduksiIkanPerAlatTangkap from "@/reports/ProduksiIkanPerAlatTangkap";
 // import ProduksiIkanPerSumberDaya from "@/reports/ProduksiIkanPerSumberDaya";
 // import StrukturUkuranIkanTertangkap from "@/reports/StrukturUkuranIkanTertangkap";
-
-// const data = [];
-// const result = data.reduce((accumulator, currentValue) => {
-//     const {rate: {roomType: {name: currentRoomType}}} = currentValue;
-//     const exist = accumulator.find(({rate: {roomType: {name: roomType}}}) => roomType === currentRoomType);
-//     if (!exist)
-//         accumulator.push(currentValue);
-//
-//     return accumulator;
-// }, []);
+const delayMs = 1000;
 
 
 const router = createRouter({
@@ -34,37 +25,58 @@ const router = createRouter({
         },
         {
             path: `/${translateToURL(ResProps.HUBUNGAN_PANJANG_BERAT)}`,
-            component: () => import ('../reports/HubunganPanjangBerat.vue')
+            component: async () => {
+                await delay(delayMs);
+                return await import ('../reports/HubunganPanjangBerat.vue')
+            }
             // component: HubunganPanjangBerat
         },
         {
             path: `/${translateToURL(ResProps.CPUE)}`,
-            component: () => import ('../reports/Cpue.vue')
+            component: async () => {
+                await delay(delayMs);
+                return await import ('../reports/Cpue.vue')
+            }
             // component: Cpue
         },
         {
             path: `/${translateToURL(ResProps.LPUE)}`,
-            component: () => import ('../reports/Lpue.vue')
+            component: async () => {
+                await delay(delayMs);
+                return await import ('../reports/Lpue.vue')
+            }
             // component: Lpue
         },
         {
             path: `/${translateToURL(ResProps.HASIL_TANGKAPAN_PER_TRIP)}`,
-            component: () => import ('../reports/HasilTangkapanPerTrip.vue')
+            component: async () => {
+                await delay(delayMs);
+                return await import ('../reports/HasilTangkapanPerTrip.vue')
+            }
             // component: HasilTangkapanPerTrip
         },
         {
             path: `/${translateToURL(ResProps.PRODUKSI_IKAN_PER_ALAT_TANGKAP)}`,
-            component: () => import ('../reports/ProduksiIkanPerAlatTangkap.vue')
+            component: async () => {
+                await delay(delayMs);
+                return await import ('../reports/ProduksiIkanPerAlatTangkap.vue')
+            }
             // component: ProduksiIkanPerAlatTangkap
         },
         {
             path: `/${translateToURL(ResProps.PRODUKSI_IKAN_PER_SUMBER_DAYA)}`,
-            component: () => import ('../reports/ProduksiIkanPerSumberDaya.vue')
+            component: async () => {
+                await delay(delayMs);
+                return await import ('../reports/ProduksiIkanPerSumberDaya.vue')
+            }
             // component: ProduksiIkanPerSumberDaya
         },
         {
             path: `/${translateToURL(ResProps.STRUKTUR_UKURAN_IKAN_TERTANGKAP)}`,
-            component: () => import ('../reports/StrukturUkuranIkanTertangkap.vue')
+            component: async () => {
+                await delay(delayMs);
+                return await import ('../reports/StrukturUkuranIkanTertangkap.vue')
+            }
             // component: StrukturUkuranIkanTertangkap
         },
     ],

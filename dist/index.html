@@ -1,19 +1,75 @@
-<!doctype html><html lang=""><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>red-vue3</title><style>html, body, #app {
-            margin: 0;
-            height: 100%;
-            /*font-family: 'Open Sans',serif;*/
-            /*font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;*/
-        }
+<!doctype html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>red-vue3</title>
+    <style>html, body, #app {
+        margin: 0;
+        height: 100%;
+        font-family: 'Roboto', sans-serif;
+        /*font-family: 'Kdam Thmor Pro', sans-serif;*/
+    }
 
-        :root {
-            font-family: 'Sarabun', sans-serif;
-        }
+    :root {
+        --ms-ring-color: none;
+        --ms-font-size: 0.75rem;
+        --ms-option-font-size: 0.75rem;
+        --ms-tag-font-size: 0.75rem;
+        --ms-tag-line-height: 1rem;
+        --ms-tag-font-weight: 100;
+        --ms-spinner-color: #0ea5e9;
+        --ms-border-color: #eeeeee;
+        --ms-radius: 5px;
+    }
 
-        .fit-height {
-            height: 100%;
-        }
+    .fit-height {
+        height: 100%;
+    }
 
-        .red-title {
-            font-size: 1.25rem;
-            line-height: 1.25;
-        }</style><script src="https://cdn.tailwindcss.com"></script><script defer="defer" src="/js/chunk-vendors.152b1155.js"></script><script defer="defer" src="/js/app.eda38708.js"></script><link href="/css/app.9c3b8b11.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but red-vue3 doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app" class="bg-grey-50"></div></body></html>
+    /* width */
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        padding-right: 5px;
+        background: #f8fafc;
+    }
+
+    ::-webkit-scrollbar-corner {
+        border-radius: 90px;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        margin-right: 5px;
+        background: #e2e8f0;
+        border-radius: 100px;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #cbd5e1;
+    }
+
+    .red-title {
+        font-size: 1.25rem;
+        line-height: 1.25;
+    }</style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer="defer"
+            src="https://cdn.jsdelivr.net/gh/annassdan/red-staging/dist/js/chunk-vendors.eeee67f4.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/gh/annassdan/red-staging/dist/js/app.bc2d4313.js"></script>
+    <link href="https://cdn.jsdelivr.net/gh/annassdan/red-staging/dist/css/app.39d29f9c.css" rel="stylesheet">
+</head>
+<body>
+<noscript><strong>We're sorry but red-vue3 doesn't work properly without JavaScript enabled. Please enable it to
+    continue.</strong></noscript>
+<div id="brpl-red" class="w-full h-full bg-gray-100"></div>
+</body>
+</html>
