@@ -1,4 +1,4 @@
-# red-vue3
+# BRPL RED
 
 ## Project setup
 ```
