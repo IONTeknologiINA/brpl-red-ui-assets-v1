@@ -278,8 +278,8 @@ export default {
       dateRangeConfig: {type: 'string', mask: 'YYYY-MM-DD',},
 
       selectedWpp: [],
-      // shouldWppRetrieve: false,
-      shouldWppRetrieve: true,
+      shouldWppRetrieve: false,
+      // shouldWppRetrieve: true,
       wppFetched: false,
       wppTotal: 0,
       wppTagsMode: true,

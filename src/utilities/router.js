@@ -9,7 +9,7 @@ import {delay, translateToURL} from "@/utilities/utils";
 // import ProduksiIkanPerAlatTangkap from "@/reports/ProduksiIkanPerAlatTangkap";
 // import ProduksiIkanPerSumberDaya from "@/reports/ProduksiIkanPerSumberDaya";
 // import StrukturUkuranIkanTertangkap from "@/reports/StrukturUkuranIkanTertangkap";
-const delayMs = 1000;
+const delayMs = 100;
 
 
 const router = createRouter({

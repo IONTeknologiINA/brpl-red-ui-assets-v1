@@ -31,9 +31,9 @@
                         class="text-gray-200 outline-none cursor-pointer -ml-1.5 hover:bg-sky-700 rounded-lg"
           />
           <div v-if="!$store.state.search">
-            <h4 v-if="$store.state.homepage" class="red-title text-lg font-medium">{{ $store.state.headerTitle }}</h4>
+            <h4 v-if="$store.state.homepage" class="red-title text-lg text-white font-medium">{{ $store.state.headerTitle }}</h4>
             <h4 v-if="!$store.state.homepage"
-                class="ml-4 text-semibold object-cover red-title text-left text-base text-gray-200">
+                class="ml-4 text-semibold object-cover red-title text-left text-base text-white">
               {{ $store.state.headerTitle }}</h4>
           </div>
         </div>
@@ -60,14 +60,14 @@
     <main class="relative w-full h-full bg-grey-100 z-30">
       <loading v-model:active="$store.state.loading"
                :color="'#dc2626'"
-               :width="38"
-               :height="38"
+               :width="39"
+               :height="39"
                :opacity="1"
                :blur="'2px'"
                :is-full-page="true"/>
       <span v-if="auth()"
             style="z-index: 10000"
-            class="text-xs text-red-600 absolute  bottom-2/4 -mb-10 left-1/2 transform -translate-x-1/2 translate-y-1/2">
+            class="text-xs text-red-600 absolute  bottom-2/4 -mb-14 left-1/2 transform -translate-x-1/2 translate-y-1/2">
       Memvalidasi pengguna ...
       </span>
       <div class="max-h-screen overflow-y-auto w-full h-full bg-gray-100">
