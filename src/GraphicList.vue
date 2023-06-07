@@ -66,7 +66,7 @@ export default {
         },
         {
           graphic: 'LPUE',
-          description: 'Grafik yang digunakan untuk menentukan hasil tangkapan per trip.',
+          description: 'Grafik yang digunakan untuk mengetahui nilai LPUE.',
           createText: 'Buat Grafik',
           url: `/${translateToURL(this.$RED.LPUE)}`,
           createStatus: true
@@ -80,23 +80,30 @@ export default {
         },
         {
           graphic: 'Produksi Ikan Per Alat Tangkap',
-          description: 'Grafik yang digunakan untuk menentukan hasil tangkapan per trip.',
+          description: 'Grafik yang digunakan untuk menentukan hasil tangkapan per alat tangkap.',
           createText: 'Buat Grafik',
           url: `/${translateToURL(this.$RED.PRODUKSI_IKAN_PER_ALAT_TANGKAP)}`,
           createStatus: true
         },
         {
           graphic: 'Produksi Ikan Per Sumber Daya',
-          description: 'Grafik yang digunakan untuk menentukan hasil tangkapan per trip.',
+          description: 'Grafik yang digunakan untuk mengetahui besaran produksi.',
           createText: 'Buat Grafik',
           url: `/${translateToURL(this.$RED.PRODUKSI_IKAN_PER_SUMBER_DAYA)}`,
           createStatus: true
         },
         {
           graphic: 'Struktur Ukuran Ikan Tertangkap',
-          description: 'Grafik yang digunakan untuk menentukan hasil tangkapan per trip.',
+          description: 'Grafik yang digunakan untuk mengetahui struktur ikan.',
           createText: 'Buat Grafik',
           url: `/${translateToURL(this.$RED.STRUKTUR_UKURAN_IKAN_TERTANGKAP)}`,
+          createStatus: true
+        },
+        {
+          graphic: 'Harvest Strategy Engine',
+          description: 'Grafik yang digunakan untuk mengeluarkan hasil dari proses Harvest Strategy',
+          createText: 'Buat Grafik',
+          url: `/${translateToURL(this.$RED.HS_PERBANDINGAN_PANJANG_BERAT)}`,
           createStatus: true
         }
       ],

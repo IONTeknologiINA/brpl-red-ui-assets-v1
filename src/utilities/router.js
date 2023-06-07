@@ -79,6 +79,13 @@ const router = createRouter({
             }
             // component: StrukturUkuranIkanTertangkap
         },
+        {
+            path: `/${translateToURL(ResProps.HS_PERBANDINGAN_PANJANG_BERAT)}`,
+            component: async () => {
+                await delay(delayMs);
+                return await import ('../reports/HsPerbandinganPanjangBerat.vue')
+            }
+        },
     ],
     scrollBehavior() {
         window.scrollTo(0, 0);
