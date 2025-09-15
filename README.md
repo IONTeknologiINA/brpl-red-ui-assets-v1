@@ -1,4 +1,4 @@
-# Vue 2 SPA Application
+# BRPL RED frontend
 
 A vue 2 app for Handling BRPL-RED UI interaction.
 
