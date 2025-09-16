@@ -1,7 +1,5 @@
 export default {
-    // HOST: 'https://staging-ebrpl-red.intelion.id',
-    // HOST: 'http://localhost:4000',
-    HOST: 'https://5325-118-137-113-62.ngrok-free.app',
+    HOST: 'https://red-api.dataikan.id',
     CPUE: 'CPUE',
     HASIL_TANGKAPAN_PER_TRIP: 'hasil_tangkapan_per_trip',
     HUBUNGAN_PANJANG_BERAT: 'hubungan_panjang_berat',
